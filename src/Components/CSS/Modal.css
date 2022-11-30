@@ -1,0 +1,128 @@
+.modalBackground {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(235, 213, 255);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modalContainer {
+  width: 400px;
+  height: 450px;
+  border-radius: 12px;
+  background-color: bisque;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalContainer .title {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 40px;
+  font-weight: 600;
+  color: white;
+}
+
+.titleCloseBtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.titleCloseBtn button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.modalContainer .body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  text-align: center;
+}
+
+
+.modalContainer .footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContainer .footer button {
+  width: 150px;
+  height: 45px;
+  margin: 10px;
+  border: none;
+  background-color: rgb(255, 187, 104);
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#cancelBtn {
+  background-color: rgb(250, 132, 155);
+}
+
+.inputstyle {
+  border-bottom: 2px solid rgb(250, 173, 173);
+  display: block;
+  width: 200px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  transition: width 0.3s linear;
+  color: rgb(247, 111, 111);
+  background-color: bisque;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.inputstyle:focus {
+  border: 2px solid rgb(247, 111, 111);
+  ;
+  border-radius: 10px;
+  width: 225px;
+  background-color: rgb(253, 240, 224);
+
+}
+
+input:focus {
+  outline: none;
+}
+.inputconstainerstyle{
+  margin-bottom: 30px;
+}
+
+.inputstyle::placeholder {
+  color: rgb(247, 111, 111);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.inputstyle:focus.inputstyle::placeholder {
+  color: rgb(253, 240, 224);
+
+}
+.sucesstext{
+  color : rgb(104, 255, 104);
+  font-size: 30px;
+  font-weight: 600;
+  text-shadow: 3px 2px rgb(189, 179, 179);
+
+}
+.logintext{
+  color : white;
+  font-size: 30px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 50px;
+
+}

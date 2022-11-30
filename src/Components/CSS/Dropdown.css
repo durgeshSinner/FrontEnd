@@ -1,0 +1,51 @@
+.dropdown {
+  position: relative;
+  list-style: none;
+
+}
+
+.dropdown-content {
+  padding-left: 10px;
+  padding-right: 10px;
+  color: white;
+  position: absolute;
+  top: 40px;
+  left: -3px;
+  display: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  z-index: 1;
+}
+
+.dropdown-content:hover .dropdown-content {
+  display: block;
+  z-index: 1;
+}
+
+.filters {
+  background-color: rgb(253, 240, 224);
+  padding-left: 10px;
+  padding-right: 10px;
+  display: block;
+  z-index: 1;
+}
+
+.filterrange {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.5;
+}
+.productFilter{
+  background-color: antiquewhite;
+
+}
+.productContainer{
+  background-color: bisque;
+
+}

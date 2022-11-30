@@ -1,0 +1,140 @@
+.box {
+  background-color: rgb(240, 194, 137);
+  border-radius: 40px;
+  position: absolute;
+  left: calc(50% - 150px);
+  transition: all 0.5s linear 0s;
+  box-shadow: 10px 10px 10px black;
+}
+
+.circle {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
+  border: 3px solid white;
+}
+
+.segment1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  background: rgb(187, 137, 235);
+  z-index: 7;
+
+  box-shadow: 0px 10px 10px black;
+
+}
+
+.segment2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background: rgba(46, 229, 157, 0.4);
+  z-index: 3;
+  box-shadow: 0px -10px 10px black;
+
+}
+
+.segment3 {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 50%;
+  height: 50%;
+  z-index: 5;
+  background: rgb(168, 75, 255);
+
+  box-shadow: 10px 10px 10px black;
+
+}
+
+.segment4 {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background: pink;
+  z-index: 1;
+
+  box-shadow: 0px 10px 10px black;
+
+
+}
+
+.segment5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  background: pink;
+  transform: rotate(45deg);
+  translate: 50% -20%;
+  z-index: 8;
+  box-shadow: 10px 10px 10px black;
+
+
+}
+
+.segment6 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background: rgb(241, 132, 132);
+  transform: rotate(45deg);
+  translate: -50% 20%;
+  z-index: 4;
+  box-shadow: 10px -10px 10px black;
+
+
+}
+
+.segment7 {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 50%;
+  height: 50%;
+  background: rgb(116, 214, 116);
+  z-index: 6;
+  transform: rotate(45deg);
+  translate: -20% -50%;
+  box-shadow: 10px 0px 10px black;
+
+
+}
+
+.segment8 {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background: rgb(172, 172, 255);
+  transform: rotate(45deg);
+  translate: 20% 50%;
+  z-index: 2;
+
+}
+
+.sucesstext {
+  color: rgb(104, 255, 104);
+  font-size: 30px;
+  font-weight: 600;
+  text-shadow: 3px 2px rgb(189, 179, 179);
+  height : 200px;
+  background-color: antiquewhite;
+  transition: all 0.5s linear 0s;
+
+}
