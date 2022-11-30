@@ -8,6 +8,32 @@
     align-items: center;
     z-index: 1;
 }
+.usercred{
+    width : 400px;
+    height : 70px;
+    background-color: rgb(197, 167, 224);
+    box-shadow: 3px 3px 5px black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom : 20px;
+    border-radius: 10px;
+    color: blanchedalmond;
+    font-size: 16px;
+    font-weight: 600;
+}
+.delivryadress{
+    width : 400px;
+    height : 100px;
+    background-color: rgb(197, 167, 224);
+    box-shadow: 3px 3px 5px black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom : 20px;
+    border-radius: 10px;
+    color: blanchedalmond;
+    font-size: 16px;
+    font-weight: 600;
+}
 
 .ordermodalcontainer {
     width: 500px;
@@ -16,12 +42,12 @@
     background-color: bisque;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     display: flex;
+    justify-content: center;
     flex-direction: column;
 }
 
 .ordercontainertitle {
     text-align: center;
-    margin-top: 10px;
     font-size: 30px;
     font-weight: 600;
     color: white;

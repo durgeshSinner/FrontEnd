@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import Profile from './Components/Profile';
 import Categorydata from './Components/Categorydata';
 import axios from 'axios'
-import Filtersbar from './Components/Filtersbar';
 import Search from './Components/Search';
 import CategorizedProducts from './Components/CategorizedProducts';
 import Orders from './Components/Orders';
@@ -19,7 +18,6 @@ export const log = React.createContext();
 export const Categoriesdata = React.createContext();
 
 function App() {
-  // const [displayfilters, setdisplayfilters] = useState(false)
 
   const [categories, Setcategories] = useState([])
   useEffect(() => {

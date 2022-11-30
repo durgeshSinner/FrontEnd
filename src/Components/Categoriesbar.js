@@ -12,7 +12,7 @@ function Categoriesbar(props) {
             {
                 props.categories.
                 map(category =>
-                                <Link to={`/browseproducts/${category.category}/subcategory `} className="col-sm-2" key={category.category}>
+                                <Link to={`/browseproducts/${category.category}/subcategory `} style={{textDecoration : "none"}} className="col-sm-2" key={category.category}>
                                     <Category Categoryname={category.category}
                                         url={category.url}  />
                                 </Link>

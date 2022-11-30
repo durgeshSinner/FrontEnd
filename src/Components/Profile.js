@@ -1,7 +1,12 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 function Profile(props) {
+    const notify = (message) => {
+        toast(message);
+    }
     const [username, setusername] = useState("")
     const [userdetails, setuserdetails] = useState({
         userName: "",
@@ -35,6 +40,7 @@ function Profile(props) {
             .then(res => {
                 console.log(res);
                 setusername(event.target.form[0].value)
+                notify("Profile Updated")
             }).catch(e => { console.log(e) })
     }
 
