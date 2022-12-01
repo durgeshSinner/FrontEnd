@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+import Orders from './Orders';
 function Profile(props) {
     const notify = (message) => {
         toast(message);
@@ -14,10 +15,14 @@ function Profile(props) {
         userPhone: ""
     })
     useEffect(() => {
-        axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
+        axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`, config)
             .then(res => {
                 setuserdetails(res.data)
-                console.log(res.data);
                 setusername(res.data.userName)
             })
             .catch(e => { console.log(e) })
@@ -25,6 +30,11 @@ function Profile(props) {
     console.log(userdetails)
     const updateprofile = (event) => {
         event.preventDefault()
+        const config = {
+            headers : {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
         const user = {
             userName: `${event.target.form[0].value}`,
             userAddress: {
@@ -36,7 +46,7 @@ function Profile(props) {
             userPhone: `${event.target.form[1].value}`,
             userId: `${userdetails.userId}`
         }
-        axios.post(`http://localhost:8080/updateprofile`, user)
+        axios.post(`http://localhost:8080/updateprofile`, user, config)
             .then(res => {
                 console.log(res);
                 setusername(event.target.form[0].value)
@@ -46,10 +56,11 @@ function Profile(props) {
 
     return (
         <div className='container-fluid'>
+            <div id="modalfororderdetails"></div>
             <div className='row'>
                 <div className='col-sm-4 profileinfocontainer'>
                     <div className='profilecontent lablestyle'><div>Hi, {username}</div></div>
-                    <div className='profilecontent lablestyle'> Order Summary</div>
+                    <Orders />
                     <Link to="/">
                         <button className='custombutton' onClick={() => { props.userlog(); localStorage.clear() }}>Log Out</button>
                     </Link>

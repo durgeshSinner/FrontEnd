@@ -3,6 +3,7 @@
     height: 100vh;
     background-color: rgb(235, 213, 255);
     position: fixed;
+    top : 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +38,7 @@
 
 .ordermodalcontainer {
     width: 500px;
-    height: 400px;
+    height: 500px;
     border-radius: 12px;
     background-color: bisque;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -47,6 +48,7 @@
 }
 
 .ordercontainertitle {
+    margin-top: 20px;
     text-align: center;
     font-size: 30px;
     font-weight: 600;
@@ -54,7 +56,7 @@
 }
 
 .ordercontainerbody {
-    margin-top: 40px;
+    margin-top: 10px;
     font-size: 15px;
     text-align: center;
 }

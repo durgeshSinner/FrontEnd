@@ -1,147 +1,165 @@
-.selectstyle{
-    outline: none;
-    border : none;
-    background-color: rgb(243, 184, 243);
-    color: white;
-    font-weight: 600;
-    text-shadow: 1px 1px 5px red;
+.selectstyle {
+  outline: none;
+  border: none;
+  background-color: rgb(243, 184, 243);
+  color: white;
+  font-weight: 600;
+  text-shadow: 1px 1px 5px red;
 }
-.cartheader{
-    text-align: center;
-    margin: 10px; 
-    padding: 10px;
-    background-color: rgb(250, 211, 250);
-    outline: none;
-    border : none;
-    background-color: rgb(243, 184, 243);
-    color: white;
-    font-weight: 600;
-    text-shadow: 3px 3px 5px rgb(253, 118, 118);
-    font-size: 30px;
+
+.cartheader {
+  text-align: center;
+  margin: 10px;
+  padding: 10px;
+  background-color: rgb(250, 211, 250);
+  outline: none;
+  border: none;
+  background-color: rgb(243, 184, 243);
+  color: white;
+  font-weight: 600;
+  text-shadow: 3px 3px 5px rgb(253, 118, 118);
+  font-size: 30px;
 
 }
+
+.cartcontent {
+  margin: 10px;
+  padding: 10px;
+
+}
+
 .custombutton {
-    height: 30px;
-    font-size: 11px;
-    letter-spacing: 2.5px;
-    font-weight: 500;
-    color: white;
-    background-color: rgb(255, 108, 255);
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease 0s;
-    cursor: pointer;
-    outline: none;
+  height: 30px;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: white;
+  background-color: rgb(255, 108, 255);
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
 }
 
 .custombutton:hover {
-    background-color: #2EE59D;
-    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
-    color: gold;
-    transform: translateY(-7px);
+  background-color: #2EE59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: gold;
+  transform: translateY(-7px);
 }
-.destroycard{
-    animation: fadeout 1s;
+
+.destroycard {
+  animation: fadeout 1s;
 
 }
 
 @keyframes fadeout {
-    from {
-        opacity: 1;
-    }
+  from {
+    opacity: 1;
+  }
 
-    to {
-        opacity: 0;
-    }
+  to {
+    opacity: 0;
+  }
 }
-.profileinfocontainer{
-    border : 1px solid  white;
-    background-color: rgb(253, 240, 224);
 
-}
-.profileeditcontainer{
-    background-color: bisque;
-
-    border : 1px solid  white;
+.profileinfocontainer {
+  border: 1px solid white;
+  background-color: rgb(253, 240, 224);
 
 }
-.profilecontent{
-    margin : 30px
+
+.profileeditcontainer {
+  background-color: bisque;
+
+  border: 1px solid white;
+
 }
-.profileeditcontent{
-    margin : 30px
+
+.profilecontent {
+  margin: 30px
 }
+
+.profileeditcontent {
+  margin: 30px
+}
+
 .profileeditstyle {
-    border-bottom: 2px solid rgb(250, 173, 173);
-    width: 200px;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    border-radius: 0;
-    transition: width 0.5s linear;
-    color: rgb(247, 111, 111);
-    background-color: bisque;
-    font-weight: 600;
-    font-size: 17px;
-  }
-  
-  .profileeditstyle:focus {
-    border: 2px solid rgb(247, 111, 111);
-    ;
-    border-radius: 10px;
-    width: 300px;
-    background-color: rgb(253, 240, 224);
-  
-  }
-  
-  input:focus {
-    outline: none;
-  }
-  
-  .profileeditstyle::placeholder {
-    color: rgb(247, 111, 111);
-    font-weight: 600;
-    font-size: 17px;
-  }
-  
-  .profileeditstyle:focus.inputstyle::placeholder {
-    color: rgb(253, 240, 224);
-  
-  }
-  .adressrotate{
-    transform: rotateZ(-90deg);
-    position: absolute;
-    top : 50%;
-    font-size: 40px;
-    color : white;
-    text-shadow: 2px 2px 5px red;
-
-  }
-  .lablestyle{
-    border:  none;
-    color: rgb(247, 111, 111);
-    /* background-color: bisque; */
-    font-weight: 600;
-    font-size: 17px;
-  }
-  .filterstyle{
-    background-color: antiquewhite;
-    font-size: 120%;
-    outline: none;
-    border : none;
-    color: rgb(253, 135, 154);
-    font-weight: 600;
-    text-shadow: 2px 2px 3px red;
-    margin-top: 50px;
-    margin-bottom: 50px;
+  border-bottom: 2px solid rgb(250, 173, 173);
+  width: 200px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  transition: width 0.5s linear;
+  color: rgb(247, 111, 111);
+  background-color: bisque;
+  font-weight: 600;
+  font-size: 17px;
 }
-.filterselectstyle{
+
+.profileeditstyle:focus {
+  border: 2px solid rgb(247, 111, 111);
+  ;
+  border-radius: 10px;
+  width: 300px;
+  background-color: rgb(253, 240, 224);
+
+}
+
+input:focus {
+  outline: none;
+}
+
+.profileeditstyle::placeholder {
+  color: rgb(247, 111, 111);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.profileeditstyle:focus.inputstyle::placeholder {
+  color: rgb(253, 240, 224);
+
+}
+
+.adressrotate {
+  transform: rotateZ(-90deg);
+  position: absolute;
+  top: 50%;
+  font-size: 40px;
+  color: white;
+  text-shadow: 2px 2px 5px red;
+
+}
+
+.lablestyle {
+  border: none;
+  color: rgb(247, 111, 111);
+  /* background-color: bisque; */
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.filterstyle {
   background-color: antiquewhite;
-    font-size: 80%;
-    outline: none;
-    border : none;
-    color: rgb(253, 135, 154);
-    font-weight: 600;
-    text-shadow: 2px 2px 3px red;
+  font-size: 120%;
+  outline: none;
+  border: none;
+  color: rgb(253, 135, 154);
+  font-weight: 600;
+  text-shadow: 2px 2px 3px red;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.filterselectstyle {
+  background-color: antiquewhite;
+  font-size: 80%;
+  outline: none;
+  border: none;
+  color: rgb(253, 135, 154);
+  font-weight: 600;
+  text-shadow: 2px 2px 3px red;
 }

@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 function OrderSummary(props) {
+    let total = 0
     const productimage = {
         backgroundImage: "",
         backgroundSize: "contain",
@@ -15,7 +16,12 @@ function OrderSummary(props) {
     }
     const [cartItems, setcartItems] = useState([])
     useEffect(() => {
-        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
+        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`, config)
             .then(res => {
                 console.log([...res.data.products])
                 setcartItems([...res.data.products])
@@ -50,21 +56,29 @@ function OrderSummary(props) {
                                             <div className='col-sm-2' >Price</div>
                                             <div className='col-sm-2' >Total</div>
                                         </div>
-                                        {
-                                            cartItems.map(item => {
-                                                return <div className='row m-2 ordercontent align-items-center justify-content-around' key={item.product.productId}>
-                                                    <div className='col-sm-4' >
-                                                        <div style={{ ...productimage, backgroundImage: `url(${item.product.url})` }}></div>
-                                                        <div className='info'>{item.product.productName}</div>
+                                        <div style={{ height: "300px", overflow: "scroll" }}>
+                                            {
+                                                cartItems.map(item => {
+                                                    total = total + item.quantity * item.product.productPrice
+                                                    return <div className='row m-2 ordercontent align-items-center justify-content-around' key={item.product.productId}>
+                                                        <div className='col-sm-4' >
+                                                            <div style={{ ...productimage, backgroundImage: `url(${item.product.url})` }}></div>
+                                                            <div className='info'>{item.product.productName}</div>
+                                                        </div>
+                                                        <div className='col-sm-2' >{item.quantity}</div>
+                                                        <div className='col-sm-2' >{item.product.productPrice}</div>
+                                                        <div className='col-sm-2' >{item.quantity}x{item.product.productPrice}</div>
                                                     </div>
-                                                    <div className='col-sm-2' >{item.quantity}</div>
-                                                    <div className='col-sm-2' >{item.product.productPrice}</div>
-                                                    <div className='col-sm-2' >{item.quantity}x{item.product.productPrice}</div>
-                                                </div>
-                                            })
-                                        }
+                                                })
+                                            }
+                                        </div>
                                     </div>
-                                    <div className='m-4 ordercontainerfooter d-flex justify-content-end'>
+                                    <div className='ordercontent d-flex justify-content-between' style={{ marginTop: "10px", marginLeft: "15px", marginRight: "15px" }}>
+                                        <div>Total</div>
+                                        <div>{total}</div>
+                                    </div>
+
+                                    <div className='m-2 ordercontainerfooter d-flex justify-content-end'>
                                         <button className='custombutton' style={{ width: "100px" }} onClick={() => { props.openbilling(); props.closeorders(); }}>Next</button>
                                     </div>
                                 </>

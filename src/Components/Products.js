@@ -49,8 +49,8 @@ function Products() {
           </div>
         </div>
         <div className='row'>
-          <div className='d-flex justify-content-between col-sm-5 mt-3' >
-            <Custombutton className="col-sm-3" message="Buy Now" />
+          <div className='d-flex justify-content-center col-sm-5 mt-3' >
+            {/* <Custombutton className="col-sm-3" message="Buy Now" /> */}
             <Addtocart ProductId={Id} />
           </div>
           <div className='col-sm-7' style={{ paddingLeft: "15%" }}>

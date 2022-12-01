@@ -48,7 +48,7 @@ function CategorizedProducts() {
                 }
             }
             </Categoriesdata.Consumer>
-            <div className='container-fluid row '>
+            <div className='container-fluid row justify-content-center '>
                 <div className='col-sm-3 productFilter justify-content-center'>
                     <Filters category={params.category} setfilters={setfilters} />
                 </div>

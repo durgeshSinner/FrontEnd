@@ -1,0 +1,23 @@
+.order{
+    background-color: white;
+    margin-top: 10px;
+    text-align: center;
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 17px;
+    
+}
+.ordercontent{
+    background-color: rgb(255, 199, 199);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    margin-right : 10px;
+    margin-left : 10px;
+    text-align: center;
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 14px;
+    border-top: 1px solid rgb(253, 140, 140);
+    color: white;
+}

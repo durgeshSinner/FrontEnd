@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import Addtocart from './Addtocart';
 import './CSS/Navbar.css'
-import Custombutton from './Custombutton';
 
 function ProductCard(props) {
     const productimage = {
@@ -25,8 +24,8 @@ function ProductCard(props) {
                     <div className='text-center'>Category : {props.subCategory}</div>
                     <div className='text-center'>Price : {props.Price}</div>
                 </Link>
-                <div className='d-flex justify-content-between'>
-                    <Custombutton message="Buy Now" />
+                <div className='d-flex justify-content-center'>
+                    {/* <Custombutton message="Buy Now" /> */}
                     <Addtocart ProductId={props.Id} />
                 </div>
 

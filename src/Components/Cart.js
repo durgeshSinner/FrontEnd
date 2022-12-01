@@ -10,7 +10,12 @@ function Cart() {
   const [displayordermodal, setdisplayordermodal] = useState(false)
   const [displayorderbilling, setdisplayorderbilling] = useState(false)
   useEffect(() => {
-    axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`)
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+    axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`, config)
       .then(res => {
         setcartItems([...res.data.products])
       })
@@ -37,12 +42,12 @@ function Cart() {
       <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} />
       <div className='container' >
         <div className='cartheader'>CART</div>
-        <div className='row'>
+        <div className='cartcontent row d-flex justify-content-around'>
           {
             cartItems.length === 0 ?
               <>
                 <div className='bg-warning text-center'>Empty Cart !!!! Feels Bad...</div>
-                
+
               </>
               :
               <>

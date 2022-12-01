@@ -7,7 +7,12 @@ import { toast } from 'react-toastify';
 function Orderbilling(props) {
     const [user, setuser] = useState({})
     useEffect(() => {
-        axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
+        axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`, config)
             .then(Response => setuser(Response.data))
             .catch(e => console.log(e))
     }, [])
@@ -38,7 +43,13 @@ function Orderbilling(props) {
                     </div>
                     <div className='m-4 ordercontainerfooter d-flex justify-content-center'>
                         <button className='custombutton' style={{ width: "200px" }} onClick={() => {
-                            axios.get(`http://localhost:8080/order/${localStorage.getItem("Id")}/createorder`)
+                            const config = {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                                }
+                            }
+
+                            axios.get(`http://localhost:8080/order/${localStorage.getItem("Id")}/createorder`,config)
                                 .then(response => { notify("order placed"); props.closebilling(); console.log(response) })
                                 .catch(error => { console.log(error) })
                         }} >PLACE ORDER</button>

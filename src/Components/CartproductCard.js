@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function CartproductCard(props) {
     const [fade, setfade] = useState("")
-    const [display , setdisplay] = useState(true)
+    const [display, setdisplay] = useState(true)
     const [Quantity, setQuantity] = useState(0)
     const productimage = {
         backgroundImage: "",
@@ -20,37 +20,48 @@ function CartproductCard(props) {
         width: "auto"
     }
     productimage.backgroundImage = `url(${props.url})`
-    useEffect(()=>{
+    useEffect(() => {
         setQuantity(props.Quantity)
-    },[])
+    }, [])
     const notify = (message) => {
         toast(message);
     }
     const updatequantity = (e) => {
         e.preventDefault()
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
         console.log(e.target.form[0].value)
         axios.post(`http://localhost:8080/cart/${localStorage.getItem("Id")}/changequantity/${props.Id}`,
-            {quantity : `${e.target.form[0].value}`}
+            { quantity: `${e.target.form[0].value}` },config
         )
             .then(res => { notify("Quantity updated") })
             .catch(e => { console.log(e) })
-        
-    }
-    
 
-    const deleteItem = ()=>{
-        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/remove/${props.Id}`)
-        .then(res => {
-            console.log(res)
-            notify("Item Deleted"); 
-            setfade("destroycard");
-            setTimeout(()=>{setdisplay(false)}, 1000)})
-        .catch(e =>{console.log(e); notify("Item Not able to be Removed")})
+    }
+
+
+    const deleteItem = () => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        }
+        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/remove/${props.Id}`,config)
+            .then(res => {
+                console.log(res)
+                notify("Item Deleted");
+                setfade("destroycard");
+                setTimeout(() => { setdisplay(false) }, 1000)
+            })
+            .catch(e => { console.log(e); notify("Item Not able to be Removed") })
     }
 
     return (
 
-        <>{display && 
+        <>{display &&
             <div className={`col-sm-3 productcard ${fade}`} style={{ margin: "5px" }}>
                 <div style={productimage}>
                 </div>
