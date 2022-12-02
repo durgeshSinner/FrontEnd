@@ -77,7 +77,7 @@ function CartproductCard(props) {
                             <div>
                                 <label >Quantity:</label>
                                 <select className='selectstyle' id="quantity" name="quantity" defaultValue={Quantity}>
-                                    {/* <option value={Quantity} disabled selected>{Quantity}</option> */}
+                                    <option value={Quantity} disabled selected>{Quantity}</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
