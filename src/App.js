@@ -13,6 +13,7 @@ import CategorizedProducts from './Components/SearchbyCategory/CategorizedProduc
 import Admin from './Components/AdminComponents/Admin';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NoPage from './Components/CommonComponents/NoPage';
 
 
 export const log = React.createContext();
@@ -20,6 +21,7 @@ export const Categoriesdata = React.createContext();
 
 function App() {
   const [categories, Setcategories] = useState([])
+  const [flag, setflag] = useState(false)
   useEffect(() => {
     console.log("inside")
     axios.get('http://localhost:8080/products/Getcategories')
@@ -38,33 +40,6 @@ function App() {
       return true
     }
   }
-  // const UserRole = async () => {
-  //   if (localStorage.getItem("token") == undefined) { return "" }
-  //   else {
-  //     let data
-  //     const config = {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`
-  //       }
-  //     }
-  //     await axios.get(`http://localhost:8080/token/user`, config)
-  //       .then(res => {
-  //         localStorage.setItem("Id", res.data[0]);
-  //         console.log(res.data[1])
-  //         data = res.data[1]
-  //       })
-  //     return data
-  //   }
-  // }
-  // let data
-  // const userdetails = (() => {
-  //   
-  //   UserRole().then((res) => { data = res })
-
-  //   return (() => { return data })()
-
-  // })();
-
 
   const [userLogged, setuserLogged] = useState({
     logged: userlogged(),
@@ -74,32 +49,35 @@ function App() {
   console.log(userLogged)
 
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+    (async () => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
       }
-    }
-    if (!userLogged.logged) {
-      return;
-    }
-    else {
-      axios.get(`http://localhost:8080/token/user`, config).then(res => {
-        localStorage.setItem("Id", res.data[0]);
-        setuserLogged({
-          logged: true,
-          id: res.data[0],
-          role: res.data[1]
-        })
+      if (!userLogged.logged) {
+        return;
       }
-      )
-        .catch(e => {
-          notify("token Expired"); localStorage.clear(); setuserLogged({
-            logged: false,
-            id: "",
-            role: ""
+      else {
+        axios.get(`http://localhost:8080/token/user`, config).then(res => {
+          setuserLogged({
+            logged: true,
+            id: res.data[0],
+            role: res.data[1]
           })
-        })
-    }
+          setflag(true)
+        }
+        )
+          .catch(e => {
+            notify("token Expired"); localStorage.clear(); setuserLogged({
+              logged: false,
+              id: "",
+              role: ""
+            })
+            setflag(true)
+          })
+      }
+    })()
 
   }, [])
 
@@ -114,23 +92,26 @@ function App() {
 
   return (
     <div >
-      <Categoriesdata.Provider value={categories}>
-        <log.Provider value={userLogged}>
-          <Nav userlogged={userLogged} setuserLogged={setuserLogged} ></Nav>
+      {flag &&
+        <Categoriesdata.Provider value={categories}>
+          <log.Provider value={userLogged}>
+            <Nav userlogged={userLogged} setuserLogged={setuserLogged} ></Nav>
 
-          <ToastContainer />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/products/:category/:subcategory/:Id' element={<Products />} />
-            <Route path='/products/:search' element={<Search />} />
-            <Route path='/categories' element={<Categorydata />} />
-            <Route path='/browseproducts/:category/:subcategory' element={<CategorizedProducts />} />
-            <Route path='/cart' element={<Cart />} />
-            <Route path='/admin' element={<Admin />} />
-            <Route path='/profile' element={<Profile userlog={Loggedout} />} />
-          </Routes>
-        </log.Provider>
-      </Categoriesdata.Provider>
+            <ToastContainer />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/products/:category/:subcategory/:Id' element={<Products />} />
+              <Route path='/products/:search' element={<Search />} />
+              <Route path='/categories' element={<Categorydata />} />
+              <Route path='/browseproducts/:category/:subcategory' element={<CategorizedProducts />} />
+              <Route path='/cart' element={<Cart />} />
+              <Route path='/admin' element={<Admin />} />
+              <Route path='/profile' element={<Profile userlog={Loggedout} />} />
+              <Route path="*" element={<NoPage />} />
+            </Routes>
+          </log.Provider>
+        </Categoriesdata.Provider>
+      }
     </div>
   );
 

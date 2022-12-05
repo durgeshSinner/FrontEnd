@@ -1,19 +1,21 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import '../CSS/Orders.css'
+import { log } from '../../App'
 import OrderDetailsProfile from './OrderDetailsProfile'
 
 function Orders() {
+  const loggeddata = useContext(log)
   const [Order, setOrder] = useState([])
   const [orders, setorders] = useState([])
   const [displayordersummary, setdisplayordersummary] = useState(false)
   useEffect(() => {
     const config = {
       headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       }
-  }
-    axios.get(`http://localhost:8080/order/${localStorage.getItem("Id")}/getorders`,config)
+    }
+    axios.get(`http://localhost:8080/order/${loggeddata.id}/getorders`, config)
       .then(response => {
         console.log(response)
         setorders([...response.data])
@@ -32,7 +34,7 @@ function Orders() {
         {
           orders.map(order => {
 
-            return <div className='ordercontent row d-flex justify-content-around'>
+            return <div className='ordercontent row d-flex justify-content-around' key={order.orderId}>
               <OrderDetailsProfile displayordersummary={displayordersummary}
                 setdisplayordersummary={setdisplayordersummary}
                 orderdetails={Order} />

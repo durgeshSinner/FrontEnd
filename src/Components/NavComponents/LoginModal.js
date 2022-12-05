@@ -17,8 +17,6 @@ function LoginModal(props) {
       .then(Response => {
         console.log(Response)
         localStorage.setItem('token', Response.data.token)
-        localStorage.setItem('Id', Response.data.id)
-        localStorage.setItem('role', Response.data.role)
         props.setuserLogged({
           logged: true,
           id: Response.data.id,

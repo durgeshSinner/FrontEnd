@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Link } from 'react-router-dom';
 import '../CSS/Navbar.css'
 import '../CSS/Inputs.css'
 import '../CSS/Modal.css'
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { log } from '../../App'
 import 'react-toastify/dist/ReactToastify.css';
 
 function CartproductCard(props) {
-    const [fade, setfade] = useState("")
-    const [display, setdisplay] = useState(true)
+    const loggeddata = useContext(log)
     const [Quantity, setQuantity] = useState(0)
     const productimage = {
         backgroundImage: "",
@@ -34,8 +34,8 @@ function CartproductCard(props) {
             }
         }
         console.log(e.target.form[0].value)
-        axios.post(`http://localhost:8080/cart/${localStorage.getItem("Id")}/changequantity/${props.Id}`,
-            { quantity: `${e.target.form[0].value}` },config
+        axios.post(`http://localhost:8080/cart/${loggeddata.id}/changequantity/${props.Id}`,
+            { quantity: `${e.target.form[0].value}` }, config
         )
             .then(res => { notify("Quantity updated") })
             .catch(e => { console.log(e) })
@@ -49,20 +49,19 @@ function CartproductCard(props) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         }
-        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/remove/${props.Id}`,config)
+        axios.get(`http://localhost:8080/cart/${loggeddata.id}/remove/${props.Id}`, config)
             .then(res => {
                 console.log(res)
                 notify("Item Deleted");
-                setfade("destroycard");
-                setTimeout(() => { setdisplay(false) }, 1000)
+                props.updatefunction();
             })
             .catch(e => { console.log(e); notify("Item Not able to be Removed") })
     }
 
     return (
 
-        <>{display &&
-            <div className={`col-sm-3 productcard ${fade}`} style={{ margin: "5px" }}>
+        <>
+            <div className={`col-sm-3 productcard `} style={{ margin: "5px" }}>
                 <div style={productimage}>
                 </div>
 
@@ -95,7 +94,7 @@ function CartproductCard(props) {
 
                 </div>
 
-            </div>}
+            </div>
         </>
 
 

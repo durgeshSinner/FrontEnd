@@ -8,12 +8,20 @@ import { log } from '../../App'
 import { useNavigate } from 'react-router-dom'
 
 function Admin() {
+    //component only for ADMIN ROLE
+
     const navigate = useNavigate()
-    const loggeddata = useContext(log)
+    const loggeddata = useContext(log) 
+    //Context of User details 
+    //loggeddata.logged bolean value if a user if logged or not
+    //loggeddata.Id  | if logged users Id  else ""
+    //loggeddata.Role | if logged users Role  else ""
 
     const notify = (message) => {
-        toast(message);
+        toast(message); //toastify alert
     }
+
+    //checks user loggged or not
     const validuser = () => {
         console.log(loggeddata)
         if (!loggeddata.logged) {
@@ -23,6 +31,7 @@ function Admin() {
             return Promise.resolve("User Logged")
         }
     }
+    //checks users Role
     const validpageuser = () => {
         if (loggeddata.role === "ADMIN") { return Promise.resolve("ADMIN ROLE") }
         else { return Promise.reject("USER ROLE") }
@@ -39,9 +48,9 @@ function Admin() {
                 notify("please log in")
                 navigate("/")
             })
-
-
     }, [])
+
+    //states used for getting subcategories of slelected category
     const [addcategory, setaddcategory] = useState("")
     const [modcategory, setmodcategory] = useState("")
 

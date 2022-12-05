@@ -1,10 +1,12 @@
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+import { log } from '../../App'
 
 function Orderbilling(props) {
+    const loggeddata = useContext(log)
     const [user, setuser] = useState({})
     useEffect(() => {
         const config = {
@@ -12,7 +14,7 @@ function Orderbilling(props) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         }
-        axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`, config)
+        axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
             .then(Response => setuser(Response.data))
             .catch(e => console.log(e))
     }, [])
@@ -49,7 +51,7 @@ function Orderbilling(props) {
                                 }
                             }
 
-                            axios.get(`http://localhost:8080/order/${localStorage.getItem("Id")}/createorder`,config)
+                            axios.get(`http://localhost:8080/order/${loggeddata.id}/createorder`, config)
                                 .then(response => { notify("order placed"); props.closebilling(); console.log(response) })
                                 .catch(error => { console.log(error) })
                         }} >PLACE ORDER</button>

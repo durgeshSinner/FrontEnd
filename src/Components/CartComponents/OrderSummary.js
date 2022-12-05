@@ -1,10 +1,12 @@
 import React from 'react'
 import '../CSS/OrderModals.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
+import { log } from '../../App'
 import { Link } from 'react-router-dom'
 
 function OrderSummary(props) {
+    const loggeddata = useContext(log)
     let total = 0
     const productimage = {
         backgroundImage: "",
@@ -21,7 +23,7 @@ function OrderSummary(props) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         }
-        axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`, config)
+        axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
             .then(res => {
                 console.log([...res.data.products])
                 setcartItems([...res.data.products])

@@ -13,12 +13,29 @@ function Cart() {
 
   const navigate = useNavigate()
   const loggeddata = useContext(log)
+  //Context of User details 
+  //loggeddata.logged bolean value if a user if logged or not
+  //loggeddata.Id  | if logged users Id  else ""
+  //loggeddata.Role | if logged users Role  else ""
+
+  //Items log
   const [cartItems, setcartItems] = useState([])
+  //states for displaying modals
   const [displayordermodal, setdisplayordermodal] = useState(false)
   const [displayorderbilling, setdisplayorderbilling] = useState(false)
-  const notify = (message) => {
-    toast(message);
+  const [update, setupdate] = useState({
+    updated: false,
+    display: true
+  })
+  const updatefunction = () => {
+    if (update.updated) { setupdate({ ...update, updated: false }) }
+    else { setupdate({ ...update, updated: true }) }
   }
+
+  const notify = (message) => {
+    toast(message); //toastify alert
+  }
+  //checks user loggged or not
   const validuser = () => {
     console.log(loggeddata)
     if (!loggeddata.logged) {
@@ -28,10 +45,11 @@ function Cart() {
       return Promise.resolve("User Logged")
     }
   }
-  const validpageuser = ()=>{
+  //checks users Role
+  const validpageuser = () => {
     console.log(loggeddata.role)
-    if(loggeddata.role==="USER"){return Promise.resolve("USER ROLE")}
-    else{return Promise.reject("ADMIN ROLE")}
+    if (loggeddata.role === "USER") { return Promise.resolve("USER ROLE") }
+    else { return Promise.reject("ADMIN ROLE") }
   }
 
   useEffect(() => {
@@ -40,32 +58,22 @@ function Cart() {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
     }
-    validuser().then(()=>{
-      validpageuser().then(()=>{
+    validuser().then(() => {
+      validpageuser().then(() => {
         axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
-        .then(res => {
-          setcartItems([...res.data.products])
-        }).catch(e => { console.log(e) })
+          .then(res => {
+            setcartItems([...res.data.products])
+          }).catch(e => { console.log(e) })
       })
-      .catch(()=>{
-        notify("Can not perform USER actions")
-        navigate("/")
-      })
+        .catch(() => {
+          notify("Can not perform USER actions")
+          navigate("/")
+        })
     }).catch(() => {
       notify("please log in")
       navigate("/")
     })
-    // validuser().then(() => {
-    //   axios.get(`http://localhost:8080/cart/${localStorage.getItem("Id")}/getCart`, config)
-    //     .then(res => {
-    //       setcartItems([...res.data.products])
-    //     }).catch(e => { console.log(e) })
-    // })
-    //   .catch(() => {
-    //     notify("please log in")
-    //     navigate("/")
-    //   })
-  }, [displayorderbilling])
+  }, [displayorderbilling,update])
 
   const closeorders = () => {
     setdisplayordermodal(false)
@@ -81,45 +89,49 @@ function Cart() {
     setdisplayordermodal(true)
   }
   return (
+    <>
+      {update.display &&
 
-    <>{
-      loggeddata.role === "USER" &&
-      <>
-        < OrderSummary displayordermodal={displayordermodal} closeorders={closeorders} openbilling={openbilling} />
-        <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} />
-        <div className='container' >
-          <div className='cartheader'>CART</div>
-          <div className='cartcontent row d-flex justify-content-around'>
-            {
-              cartItems.length === 0 ?
-                <>
-                  <div className='bg-warning text-center'>Empty Cart !!!! Feels Bad...</div>
+        <>{
+          loggeddata.role === "USER" &&
+          <>
+            < OrderSummary displayordermodal={displayordermodal} closeorders={closeorders} openbilling={openbilling} />
+            <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} />
+            <div className='container' >
+              <div className='cartheader'>CART</div>
+              <div className='cartcontent row d-flex justify-content-around'>
+                {
+                  cartItems.length === 0 ?
+                    <>
+                      <div className='bg-warning text-center'>Empty Cart !!!! Feels Bad...</div>
 
-                </>
-                :
-                <>
-                  {
-                    cartItems.map(cartitem =>
-                      <CartproductCard ProductName={cartitem.product.productName} category={cartitem.product.productCategory} subCategory={cartitem.product.productSubCategory}
-                        Price={cartitem.product.productPrice} key={cartitem.product.productId} Id={cartitem.product.productId}
-                        url={cartitem.product.url} Quantity={cartitem.quantity} />
-                    )
-                  }
-                </>
-            }
-          </div>
-          <div className='cartheader' style={{ backgroundColor: "white" }}><button className='custombutton'
-            onClick={() => { setdisplayordermodal(true) }}
-            style={{ backgroundColor: "#2EE59D", width: "300px", height: "45px" }}> PLACE ORDER</button> </div>
+                    </>
+                    :
+                    <>
+                      {
+                        cartItems.map(cartitem =>
+                          <CartproductCard ProductName={cartitem.product.productName} category={cartitem.product.productCategory} subCategory={cartitem.product.productSubCategory}
+                            Price={cartitem.product.productPrice} key={cartitem.product.productId} Id={cartitem.product.productId}
+                            url={cartitem.product.url} Quantity={cartitem.quantity} updatefunction={updatefunction} />
+                        )
+                      }
+                    </>
+                }
+              </div>
+              <div className='cartheader' style={{ backgroundColor: "white" }}><button className='custombutton'
+                onClick={() => { setdisplayordermodal(true) }}
+                style={{ backgroundColor: "#2EE59D", width: "300px", height: "45px" }}> PLACE ORDER</button> </div>
 
-        </div>
-      </>
+            </div>
+          </>
 
-    }
-      {loggeddata.role === "ADMIN" &&
-        <div className='bg-warning'>ADMIN does not have this Functionality</div>
+        }
+          {loggeddata.role === "ADMIN" &&
+            <div className='bg-warning'>ADMIN does not have this Functionality</div>
+          }
+
+        </>
       }
-
     </>
   )
 }

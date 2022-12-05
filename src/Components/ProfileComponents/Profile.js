@@ -42,7 +42,7 @@ function Profile(props) {
         }
         validuser().then(() => {
             validpageuser().then(() => {
-                axios.get(`http://localhost:8080/getprofile/${localStorage.getItem("Id")}`, config)
+                axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
                 .then(res => {
                     setuserdetails(res.data)
                     setusername(res.data.userName)

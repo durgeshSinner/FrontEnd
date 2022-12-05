@@ -1,11 +1,14 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import '../CSS/Fortune.css'
 import Spinbutton from './Spinbutton'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { log } from '../../App'
+
 
 function WheelofFortune() {
+    const loggeddata = useContext(log)
     const notify = (message) => {
         toast(message);
     }
@@ -48,7 +51,7 @@ function WheelofFortune() {
         setspin(true)
     }
     const getvoucher = (offernumber) => {
-        axios.get(`http://localhost:8080/voucher/create/${localStorage.getItem("Id")}/${offernumber}`, config)
+        axios.get(`http://localhost:8080/voucher/create/${loggeddata.id}/${offernumber}`, config)
             .then(res => { console.log(res); setoffer({ ...offer, voucher: res.data }) })
             .catch(error => setoffer({ voucher: error.response.data, existing: true }))
     }
