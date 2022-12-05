@@ -1,76 +1,138 @@
 import { Routes, Route } from 'react-router-dom'
-import Aboutus from './Components/Aboutus';
-import Home from './Components/Home';
-import Products from './Components/Products';
-import Nav from './Components/Nav'
-import Cart from './Components/Cart';
+import Home from './Components/HomeComponents/Home';
+import Products from './Components/CommonComponents/Products';
+import Nav from './Components/NavComponents/Nav'
+import Cart from './Components/CartComponents/Cart';
 import { ToastContainer } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
-import Profile from './Components/Profile';
-import Categorydata from './Components/Categorydata';
+import Profile from './Components/ProfileComponents/Profile';
+import Categorydata from './Components/CategoryComponents/Categorydata';
 import axios from 'axios'
-import Search from './Components/Search';
-import CategorizedProducts from './Components/CategorizedProducts';
-import Orders from './Components/Orders';
+import Search from './Components/NavComponents/Search';
+import CategorizedProducts from './Components/SearchbyCategory/CategorizedProducts';
+import Admin from './Components/AdminComponents/Admin';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export const log = React.createContext();
 export const Categoriesdata = React.createContext();
 
 function App() {
-
   const [categories, Setcategories] = useState([])
   useEffect(() => {
+    console.log("inside")
     axios.get('http://localhost:8080/products/Getcategories')
-      .then(res => { console.log(res); Setcategories([...res.data]) })
+      .then(res => { Setcategories([...res.data]) })
       .catch(e => console.log(e))
   }, [])
+  const notify = (message) => {
+    toast(message);
+  }
 
-
-  const [userLogged, setuserLogged] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem('Id') == undefined) {
-      setuserLogged(false)
-      console.log("effect in app")
+  const userlogged = () => {
+    if (localStorage.getItem('token') == undefined) {
+      return false
     }
     else {
-      console.log("effect in app")
-      setuserLogged(true)
+      return true
     }
-  }, [])
-  console.log("app")
-  const LoggedIn = () => {
-    setuserLogged(true)
-    console.log("Logged In")
   }
+  // const UserRole = async () => {
+  //   if (localStorage.getItem("token") == undefined) { return "" }
+  //   else {
+  //     let data
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`
+  //       }
+  //     }
+  //     await axios.get(`http://localhost:8080/token/user`, config)
+  //       .then(res => {
+  //         localStorage.setItem("Id", res.data[0]);
+  //         console.log(res.data[1])
+  //         data = res.data[1]
+  //       })
+  //     return data
+  //   }
+  // }
+  // let data
+  // const userdetails = (() => {
+  //   
+  //   UserRole().then((res) => { data = res })
+
+  //   return (() => { return data })()
+
+  // })();
+
+
+  const [userLogged, setuserLogged] = useState({
+    logged: userlogged(),
+    id: "",
+    role: ""
+  });
+  console.log(userLogged)
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+    if (!userLogged.logged) {
+      return;
+    }
+    else {
+      axios.get(`http://localhost:8080/token/user`, config).then(res => {
+        localStorage.setItem("Id", res.data[0]);
+        setuserLogged({
+          logged: true,
+          id: res.data[0],
+          role: res.data[1]
+        })
+      }
+      )
+        .catch(e => {
+          notify("token Expired"); localStorage.clear(); setuserLogged({
+            logged: false,
+            id: "",
+            role: ""
+          })
+        })
+    }
+
+  }, [])
+
   const Loggedout = () => {
-    setuserLogged(false)
+    setuserLogged({
+      logged: false,
+      id: "",
+      role: ""
+    })
     console.log("Logged Out")
   }
 
   return (
     <div >
       <Categoriesdata.Provider value={categories}>
-          <log.Provider value={userLogged}>
-            <Nav userlogged={userLogged} loggedin={LoggedIn} loggedout={Loggedout} ></Nav>
-            {/* {displayfilters && <Filtersbar categories={categories} filters={filters} setfilters={setfilters} />} */}
+        <log.Provider value={userLogged}>
+          <Nav userlogged={userLogged} setuserLogged={setuserLogged} ></Nav>
 
-            <ToastContainer />
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/products/:category/:subcategory/:Id' element={<Products />} />
-              <Route path='/products/:search' element={<Search/>} />
-              <Route path='/categories' element={<Categorydata />} />
-              <Route path='/browseproducts/:category/:subcategory' element={<CategorizedProducts/>}/>
-              <Route path='/aboutus' element={<Aboutus />} />
-              <Route path='/cart' element={<Cart />} />
-              <Route path='/orders' element={<Orders/>}/>
-              <Route path='/profile' element={<Profile userlog={Loggedout} />} />
-            </Routes>
-          </log.Provider>
+          <ToastContainer />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/products/:category/:subcategory/:Id' element={<Products />} />
+            <Route path='/products/:search' element={<Search />} />
+            <Route path='/categories' element={<Categorydata />} />
+            <Route path='/browseproducts/:category/:subcategory' element={<CategorizedProducts />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/admin' element={<Admin />} />
+            <Route path='/profile' element={<Profile userlog={Loggedout} />} />
+          </Routes>
+        </log.Provider>
       </Categoriesdata.Provider>
     </div>
   );
-}
 
+}
 export default App;

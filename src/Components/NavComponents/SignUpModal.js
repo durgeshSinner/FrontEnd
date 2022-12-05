@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './CSS/Modal.css'
-import './CSS/Navbar.css'
+import '../CSS/Modal.css'
+import '../CSS/Navbar.css'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +18,8 @@ function SignUpModal(props) {
   })
   const [usernames, setusenames] = useState([])
   const [validateEmail, setvalidateEmail] = useState(true)
+  const [validatephone, setvalidatephone] = useState(false)
+  const [validatepincode, setvalidatepincode] = useState(false)
   const notify = (message) => {
     toast(message);
   }
@@ -39,19 +41,31 @@ function SignUpModal(props) {
     else { setvalidateEmail(true) }
   }
   const formvalidation = (e) => {
-    if (e.target.form[0].value === "") { notify("Please fill in details"); return Promise.reject("Not filled") }
-    else if (e.target.form[1].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[2].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[3].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[4].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[5].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[6].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
-    else if (e.target.form[7].value === "") { notify("Please fill in details"); return Promise.reject("Not filled"); }
+    if (e.target.form[0].value === "" || !validateEmail) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately") }
+    else if (e.target.form[1].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[2].value === "" || validatephone) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[3].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[4].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[5].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[6].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[7].value === "" || validatepincode) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
     else {
       return Promise.resolve("Filled")
     }
+  }
+  const phonevalidation = (e) => {
+    var phoneno = /^\d{10}$/;
+    if (!e.target.value.match(phoneno)) { setvalidatephone(true) }
+    else{setvalidatephone(false)}
 
   }
+  const pincodevalidation = (e) => {
+    var pinno = /^\d{6}$/;
+    if (!e.target.value.match(pinno)) { setvalidatepincode(true) }
+    else{setvalidatepincode(false)}
+
+  }
+
   const formsubmit = (e) => {
     e.preventDefault();
     console.log(e.target.form[0].value)
@@ -113,16 +127,17 @@ function SignUpModal(props) {
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
                     <input type="text" className='inputstyle' onChange={(event) => {
-                      validation(event)
+                      phonevalidation(event);
                       if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, phonenumber: true }) }
                       else { setwhitespacefields({ ...whitespacefields, phonenumber: false }) }
                     }} placeholder='Phone Number'></input>
                     {whitespacefields.phonenumber && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    {validatephone && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>must be a number of 10 digits</div>}
 
                   </div>
                   <div className='col-sm-6 inputconstainerstyle' >
                     <input type="text" className='inputstyle' onChange={(event) => {
-                      validation(event)
+
                       if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, username: true }) }
                       else { setwhitespacefields({ ...whitespacefields, username: false }) }
                     }} placeholder='User Name'></input>
@@ -133,7 +148,7 @@ function SignUpModal(props) {
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
                     <input type="text" className='inputstyle' onChange={(event) => {
-                      validation(event)
+
                       if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, streetname: true }) }
                       else { setwhitespacefields({ ...whitespacefields, streetname: false }) }
                     }} placeholder='Street Name'></input>
@@ -142,7 +157,7 @@ function SignUpModal(props) {
                   </div>
                   <div className='col-sm-6 inputconstainerstyle' >
                     <input type="text" className='inputstyle' onChange={(event) => {
-                      validation(event)
+
                       if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, cityname: true }) }
                       else { setwhitespacefields({ ...whitespacefields, cityname: false }) }
                     }} placeholder='City Name'></input>
@@ -153,15 +168,17 @@ function SignUpModal(props) {
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
                     <input type="text" className='inputstyle' onChange={(event) => {
-                      validation(event); if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, pincode: true }) }
+                      pincodevalidation(event);
+                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, pincode: true }) }
                       else { setwhitespacefields({ ...whitespacefields, pincode: false }) }
                     }} placeholder='Pin Code'></input>
                     {whitespacefields.pincode && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    {validatepincode && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>must be a number of 6 digits</div>}
 
                   </div>
                   <div className='col-sm-6 inputconstainerstyle'>
                     <select className='inputstyle' onChange={(event) => {
-                      validation(event)
+
                       if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, state: true }) }
                       else { setwhitespacefields({ ...whitespacefields, state: false }) }
                     }} defaultValue=''>

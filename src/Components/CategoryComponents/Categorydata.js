@@ -1,6 +1,6 @@
 import React from 'react'
 import Categories from './Categories'
-import {Categoriesdata} from '../App'
+import {Categoriesdata} from '../../App'
 
 function Categorydata() {
    

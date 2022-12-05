@@ -1,12 +1,9 @@
 import React from 'react'
-import './CSS/Navbar.css'
+import '../CSS/Navbar.css'
 
 
 function Category(props) {
-    const handleclick = () => {
-        var element = document.getElementById(`${props.Categoryname}`);
-        element.scrollIntoView();
-    }
+    
     const categoryimage = {
         width: "auto",
         height: "50px",

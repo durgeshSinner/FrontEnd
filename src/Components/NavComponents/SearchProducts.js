@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import ProductCard from './ProductCard'
+import ProductCard from '../CommonComponents/ProductCard'
 import axios from 'axios'
-import './CSS/Search.css'
-import { Categoriesdata } from '../App'
-import './CSS/Inputs.css'
-import Categoriesbar from './Categoriesbar'
+import '../CSS/Search.css'
+import { Categoriesdata } from '../../App'
+import '../CSS/Inputs.css'
+import Categoriesbar from '../CommonComponents/Categoriesbar'
 import SearchFilters from './SearchFilters'
 
 function SearchProducts(props) {

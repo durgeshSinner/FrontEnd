@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import './CSS/Modal.css'
-import './CSS/Navbar.css'
+import '../CSS/Modal.css'
+import '../CSS/Navbar.css'
 
 function LoginModal(props) {
   const [login, setlogin] = useState(true)
@@ -18,10 +18,14 @@ function LoginModal(props) {
         console.log(Response)
         localStorage.setItem('token', Response.data.token)
         localStorage.setItem('Id', Response.data.id)
-        if(localStorage.getItem('token')!=undefined){ //needs rework
-          props.closemodal()
-        }
-        props.loggedin()
+        localStorage.setItem('role', Response.data.role)
+        props.setuserLogged({
+          logged: true,
+          id: Response.data.id,
+          role: Response.data.role
+        })
+        props.closemodal()
+
       })
       .catch(e => { console.log(e); setlogin(false) })
 

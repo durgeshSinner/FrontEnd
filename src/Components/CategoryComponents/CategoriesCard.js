@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react'
-import './CSS/Navbar.css'
+import React, { useState } from 'react'
+import '../CSS/Navbar.css'
 import Subcategorycard from './Subcategorycard'
 import SubcategoryProducts from './SubcategoryProducts'
 

@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import ProductCard from './ProductCard'
-import './CSS/Dropdown.css'
+import ProductCard from '../CommonComponents/ProductCard'
+import '../CSS/Dropdown.css'
 import Filters from './Filters'
-import { Categoriesdata } from '../App'
-import Categoriesbar from './Categoriesbar'
+import { Categoriesdata } from '../../App'
+import Categoriesbar from '../CommonComponents/Categoriesbar'
 
 
 function CategorizedProducts() {

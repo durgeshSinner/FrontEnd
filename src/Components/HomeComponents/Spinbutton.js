@@ -1,4 +1,4 @@
-import './CSS/Navbar.css'
+import '../CSS/Navbar.css'
 import React from 'react'
 
 

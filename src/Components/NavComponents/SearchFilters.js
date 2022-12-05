@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Categoriesdata } from '../App'
-import './CSS/Navbar.css'
-import './CSS/Inputs.css'
+import { Categoriesdata } from '../../App'
+import '../CSS/Navbar.css'
+import '../CSS/Inputs.css'
 
 function SearchFilters(props) {
     const [rangedisplay, setrangedisplay] = useState(true)

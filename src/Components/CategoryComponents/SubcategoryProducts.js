@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import ProductCard from './ProductCard'
+import ProductCard from '../CommonComponents/ProductCard'
 
 function SubcategoryProducts(props) {
     const categoryimage = {

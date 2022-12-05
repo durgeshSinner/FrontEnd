@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CategoriesCard from './CategoriesCard'
-import Categoriesbar from './Categoriesbar'
+import Categoriesbar from '../CommonComponents/Categoriesbar'
 
 
 function Categories(props) {

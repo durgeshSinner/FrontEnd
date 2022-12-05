@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import './CSS/Navbar.css'
-import './CSS/Inputs.css'
-import './CSS/Modal.css'
+import '../CSS/Navbar.css'
+import '../CSS/Inputs.css'
+import '../CSS/Modal.css'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -77,7 +77,6 @@ function CartproductCard(props) {
                             <div>
                                 <label >Quantity:</label>
                                 <select className='selectstyle' id="quantity" name="quantity" defaultValue={Quantity}>
-                                    <option value={Quantity} disabled selected>{Quantity}</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>

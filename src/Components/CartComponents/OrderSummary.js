@@ -1,5 +1,5 @@
 import React from 'react'
-import './CSS/OrderModals.css'
+import '../CSS/OrderModals.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'

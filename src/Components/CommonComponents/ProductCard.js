@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import Addtocart from './Addtocart';
-import './CSS/Navbar.css'
+import '../CSS/Navbar.css'
+import { log } from '../../App'
+import { useContext } from 'react';
 
 function ProductCard(props) {
+    const loggeddata = useContext(log)
     const productimage = {
         backgroundImage: "",
         backgroundSize: "contain",
@@ -25,8 +28,7 @@ function ProductCard(props) {
                     <div className='text-center'>Price : {props.Price}</div>
                 </Link>
                 <div className='d-flex justify-content-center'>
-                    {/* <Custombutton message="Buy Now" /> */}
-                    <Addtocart ProductId={props.Id} />
+                    {loggeddata.role !== "ADMIN" && <Addtocart ProductId={props.Id} />}
                 </div>
 
             </div>

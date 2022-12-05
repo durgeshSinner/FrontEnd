@@ -1,8 +1,7 @@
 import React from 'react'
-import Categoriesbar from './Categoriesbar'
+import Categoriesbar from '../CommonComponents/Categoriesbar'
 import WheelofFortune from './WheelofFortune'
-import { Categoriesdata } from '../App'
-
+import { Categoriesdata } from '../../App'
 
 export default function Home() {
 

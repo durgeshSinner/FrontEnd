@@ -1,6 +1,5 @@
 import React from 'react'
 import Category from './Category'
-import { filtersdata } from '../App'
 import {Link} from 'react-router-dom'
 
 

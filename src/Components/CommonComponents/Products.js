@@ -1,15 +1,17 @@
 import { Link, useParams } from 'react-router-dom'
-import './CSS/Navbar.css'
+import '../CSS/Navbar.css'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
-import Custombutton from './Custombutton'
+import { useState, useEffect, useContext } from 'react'
+import Custombutton from '../Custombutton'
 import Addtocart from './Addtocart'
 import Categoriesbar from './Categoriesbar'
-import {Categoriesdata} from '../App'
+import {Categoriesdata} from '../../App'
+import { log } from '../../App'
 
 
 
 function Products() {
+  const loggeddata = useContext(log)
   const params = useParams()
   const Id = params.Id
   const [product, setproduct] = useState({})
@@ -18,8 +20,10 @@ function Products() {
       .then(response => setproduct(response.data))
       .catch(error => console.log(error))
   }, [])
+  console.log(loggeddata)
 
   return (
+    
     <div style={{ backgroundColor: "rgb(250, 243, 234)", height: "100vh" }}>
       <Categoriesdata.Consumer>{
         data => {
@@ -50,12 +54,10 @@ function Products() {
         </div>
         <div className='row'>
           <div className='d-flex justify-content-center col-sm-5 mt-3' >
-            {/* <Custombutton className="col-sm-3" message="Buy Now" /> */}
-            <Addtocart ProductId={Id} />
+            {loggeddata.role !=="ADMIN" && <Addtocart ProductId={Id} /> }
           </div>
           <div className='col-sm-7' style={{ paddingLeft: "15%" }}>
             <Link to="/categories"><Custombutton className="col-sm-3" message="....Back To Categories...." /></Link>
-
           </div>
         </div>
       </div>

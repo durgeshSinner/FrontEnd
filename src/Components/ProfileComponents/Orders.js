@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import './CSS/Orders.css'
+import '../CSS/Orders.css'
 import OrderDetailsProfile from './OrderDetailsProfile'
 
 function Orders() {

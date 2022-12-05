@@ -1,5 +1,5 @@
 import React from 'react'
-import './CSS/OrderModals.css'
+import '../CSS/OrderModals.css'
 import ReactDom from 'react-dom'
 function Orderprofilemodal(props) {
     let total = 0
