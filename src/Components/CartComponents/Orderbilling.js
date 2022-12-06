@@ -6,8 +6,11 @@ import { toast } from 'react-toastify';
 import { log } from '../../App'
 
 function Orderbilling(props) {
+    //user context
     const loggeddata = useContext(log)
+    //userdetails
     const [user, setuser] = useState({})
+    // fetch user details by axios call
     useEffect(() => {
         const config = {
             headers: {
@@ -52,7 +55,7 @@ function Orderbilling(props) {
                             }
 
                             axios.get(`http://localhost:8080/order/${loggeddata.id}/createorder`, config)
-                                .then(response => { notify("order placed"); props.closebilling(); console.log(response) })
+                                .then(response => { notify("order placed"); props.closebilling(); props.updatefunction(); console.log(response) })
                                 .catch(error => { console.log(error) })
                         }} >PLACE ORDER</button>
                     </div>

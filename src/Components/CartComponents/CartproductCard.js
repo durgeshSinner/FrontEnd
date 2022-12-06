@@ -9,6 +9,7 @@ import { log } from '../../App'
 import 'react-toastify/dist/ReactToastify.css';
 
 function CartproductCard(props) {
+
     const loggeddata = useContext(log)
     const [Quantity, setQuantity] = useState(0)
     const productimage = {
@@ -26,6 +27,7 @@ function CartproductCard(props) {
     const notify = (message) => {
         toast(message);
     }
+    //update quantity
     const updatequantity = (e) => {
         e.preventDefault()
         const config = {
@@ -37,12 +39,12 @@ function CartproductCard(props) {
         axios.post(`http://localhost:8080/cart/${loggeddata.id}/changequantity/${props.Id}`,
             { quantity: `${e.target.form[0].value}` }, config
         )
-            .then(res => { notify("Quantity updated") })
-            .catch(e => { console.log(e) })
+            .then(res => { props.updatefunction(); notify("Quantity updated"); })
+            .catch(e => { notify("Unable to Update Quantity") })
 
     }
 
-
+    //delete item
     const deleteItem = () => {
         const config = {
             headers: {
@@ -61,7 +63,7 @@ function CartproductCard(props) {
     return (
 
         <>
-            <div className={`col-sm-3 productcard `} style={{ margin: "5px" }}>
+            < div className={`col-sm-3 productcard `} style={{ margin: "5px" }}>
                 <div style={productimage}>
                 </div>
 
@@ -74,17 +76,20 @@ function CartproductCard(props) {
                     <form >
                         <div className='row d-flex justify-content-start'>
                             <div>
-                                <label >Quantity:</label>
-                                <select className='selectstyle' id="quantity" name="quantity" defaultValue={Quantity}>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                </select>
-                            </div>
+                                {Quantity != 0 && //flag for Quantity to get updated from useEffect
+                                    <>
+                                        <label >Quantity:</label>
+                                        <select className='selectstyle' id="quantity" name="quantity" defaultValue={Quantity}>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                        </select>
+                                    </>
+                                }</div>
                             <div className='d-flex justify-content-between'>
                                 <button className='custombutton' type="submit" onClick={updatequantity}>Update</button>
                             </div>

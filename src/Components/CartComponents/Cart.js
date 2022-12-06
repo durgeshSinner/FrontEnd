@@ -23,10 +23,13 @@ function Cart() {
   //states for displaying modals
   const [displayordermodal, setdisplayordermodal] = useState(false)
   const [displayorderbilling, setdisplayorderbilling] = useState(false)
+
+  //flag to make render wait until the states ae updated
   const [update, setupdate] = useState({
     updated: false,
     display: true
   })
+  //just to make  state updated
   const updatefunction = () => {
     if (update.updated) { setupdate({ ...update, updated: false }) }
     else { setupdate({ ...update, updated: true }) }
@@ -63,7 +66,7 @@ function Cart() {
         axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
           .then(res => {
             setcartItems([...res.data.products])
-          }).catch(e => { console.log(e) })
+          }).catch(e => { notify("unable to get Cart") })
       })
         .catch(() => {
           notify("Can not perform USER actions")
@@ -73,8 +76,9 @@ function Cart() {
       notify("please log in")
       navigate("/")
     })
-  }, [displayorderbilling,update])
+  }, [update])
 
+  //modal open and close functions
   const closeorders = () => {
     setdisplayordermodal(false)
   }
@@ -96,7 +100,7 @@ function Cart() {
           loggeddata.role === "USER" &&
           <>
             < OrderSummary displayordermodal={displayordermodal} closeorders={closeorders} openbilling={openbilling} />
-            <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} />
+            <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} updatefunction={updatefunction} />
             <div className='container' >
               <div className='cartheader'>CART</div>
               <div className='cartcontent row d-flex justify-content-around'>

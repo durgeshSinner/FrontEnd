@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import Orders from './Orders';
 import { log } from '../../App'
 import { useNavigate } from 'react-router-dom'
+import UserForm from '../NavComponents/UserForm'
 
 function Profile(props) {
     const navigate = useNavigate()
@@ -43,11 +44,11 @@ function Profile(props) {
         validuser().then(() => {
             validpageuser().then(() => {
                 axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
-                .then(res => {
-                    setuserdetails(res.data)
-                    setusername(res.data.userName)
-                })
-                .catch(e => { console.log(e) })
+                    .then(res => {
+                        setuserdetails(res.data)
+                        setusername(res.data.userName)
+                    })
+                    .catch(e => { console.log(e) })
             }).catch(() => {
                 notify("Can not perform USER actions")
                 navigate("/")
@@ -59,39 +60,43 @@ function Profile(props) {
     }, [])
     console.log(userdetails)
 
-    const updateprofile = (event) => {
-        event.preventDefault()
+    const formsubmit = (e, formvalidation) => {
+        e.preventDefault();
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         }
+        console.log(e.target.form[0].value)
         const user = {
-            userName: `${event.target.form[0].value}`,
+            userId : loggeddata.id,
+            userName: e.target.form[1].value,
             userAddress: {
-                city: `${event.target.form[3].value}`,
-                state: `${event.target.form[5].value}`,
-                pincode: `${event.target.form[4].value}`,
-                street: `${event.target.form[2].value}`
+                city: e.target.form[3].value,
+                pincode: e.target.form[4].value,
+                street: e.target.form[2].value,
+                state: e.target.form[5].value
             },
-            userPhone: `${event.target.form[1].value}`,
-            userId: `${userdetails.userId}`
+            userPhone: e.target.form[0].value
         }
-        axios.post(`http://localhost:8080/updateprofile`, user, config)
-            .then(res => {
-                console.log(res);
-                setusername(event.target.form[0].value)
-                notify("Profile Updated")
-            }).catch(e => { console.log(e) })
+        formvalidation(e)
+            .then(() => {
+                axios.post(`http://localhost:8080/updateprofile`, user, config)
+                    .then(res => {
+                        console.log(res);
+                        setusername(e.target.form[0].value)
+                        notify("Profile Updated")
+                    }).catch(e => { console.log(e) })
+            })
+            .catch(e => console.log(e))
     }
-
     return (
         <>
             {
                 loggeddata.role === "USER" &&
-                <div className='container-fluid'>
+                <div className='container-fluid' >
                     <div id="modalfororderdetails"></div>
-                    <div className='row'>
+                    <div className='row' style={{ height: "100vh" }}>
                         <div className='col-sm-4 profileinfocontainer'>
                             <div className='profilecontent lablestyle'><div>Hi, {username}</div></div>
                             <Orders />
@@ -101,38 +106,9 @@ function Profile(props) {
                         </div>
                         <div className='col-sm-8 profileeditcontainer'>
                             <form>
-                                <div className="profileeditcontent d-flex justify-content-around">
-                                    <div className='lablestyle'>User Name</div>
-                                    <input className='profileeditstyle ' id="userName" type="text" defaultValue={userdetails.userName} placeholder={userdetails.userName} />
+                                <div style={{ paddingTop: "50px", paddingBottom: "50px" }}>
+                                    <UserForm formsubmit={formsubmit} details={userdetails} usage={"Update Profile"} updateprofile />
                                 </div>
-                                <div className="profileeditcontent d-flex justify-content-around">
-                                    <div className='lablestyle'>Phone Number</div>
-                                    <input className='profileeditstyle ' type="text" defaultValue={userdetails.userPhone} placeholder='Phone Number' />
-                                </div>
-                                <div className='container-fluid row'>
-                                    <div className="profileeditcontent col-sm-3" style={{ position: "relative" }}>
-                                        <div className='adressrotate'>ADDRESS</div>
-                                    </div>
-                                    <div className="col-sm-8">
-                                        <div className="profileeditcontent d-flex justify-content-between ">
-                                            <div className='lablestyle'>Street Name</div>
-                                            <input className='profileeditstyle ' type="text" defaultValue={userdetails.userAddress.street} placeholder='Street name' />
-                                        </div>
-                                        <div className="profileeditcontent d-flex justify-content-between">
-                                            <div className='lablestyle'>City name</div>
-                                            <input className='profileeditstyle ' type="text" defaultValue={userdetails.userAddress.city} placeholder='City name' />
-                                        </div>
-                                        <div className="profileeditcontent d-flex justify-content-between">
-                                            <div className='lablestyle'>Pincode</div>
-                                            <input className='profileeditstyle ' type="text" defaultValue={userdetails.userAddress.pincode} placeholder='Pincode' />
-                                        </div>
-                                        <div className="profileeditcontent d-flex justify-content-between">
-                                            <div className='lablestyle'>State Name</div>
-                                            <input className='profileeditstyle ' type="text" defaultValue={userdetails.userAddress.state} placeholder='State name' />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='d-flex justify-content-end m-3'><button type="submit" className='custombutton' onClick={updateprofile}>Update Profile</button></div>
                             </form>
                         </div>
 

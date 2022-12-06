@@ -6,8 +6,11 @@ import { log } from '../../App'
 import { Link } from 'react-router-dom'
 
 function OrderSummary(props) {
+    //user context
     const loggeddata = useContext(log)
+    // to caluculate price
     let total = 0
+
     const productimage = {
         backgroundImage: "",
         backgroundSize: "contain",
@@ -16,6 +19,7 @@ function OrderSummary(props) {
         height: "50px",
         width: "auto"
     }
+    //cart of user
     const [cartItems, setcartItems] = useState([])
     useEffect(() => {
         const config = {

@@ -56,7 +56,7 @@ function WheelofFortune() {
             .catch(error => setoffer({ voucher: error.response.data, existing: true }))
     }
     const spinthewheel = () => {
-        if (localStorage.getItem("Id") === null) { return notify("Please Log IN"); }
+        if (localStorage.getItem("token") == null) { return notify("Please Log IN"); }
         else {
             const randomnumber = Math.random() * 5000
             setpointer({ ...pointer, transition: "transform 3s ease-out", transform: `rotate(${randomnumber}deg)` })
