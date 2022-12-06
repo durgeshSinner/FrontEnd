@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 function Subcategorycard(props) {
 
+    //object for dynamic style changing background
     const categoryimage = {
         width: "auto",
         height: "100px",

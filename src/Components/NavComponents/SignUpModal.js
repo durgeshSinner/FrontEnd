@@ -6,24 +6,23 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function SignUpModal(props) {
+  //state to change validity of input fields
   const [whitespacefields, setwhitespacefields] = useState({
-    email: false,
-    password: false,
-    phonenumber: false,
-    username: false,
-    streetname: false,
-    cityname: false,
-    pincode: false,
-    state: false
+    email: { display: false, message: "" },
+    password: { display: false, message: "" },
+    phonenumber: { display: false, message: "" },
+    username: { display: false, message: "" },
+    streetname: { display: false, message: "" },
+    cityname: { display: false, message: "" },
+    pincode: { display: false, message: "" },
+    state: { display: false, message: "" }
   })
+  //list of current users for duplicate entry userEmail
   const [usernames, setusenames] = useState([])
-  const [validateEmail, setvalidateEmail] = useState(true)
-  const [validatephone, setvalidatephone] = useState(false)
-  const [validatepincode, setvalidatepincode] = useState(false)
   const notify = (message) => {
     toast(message);
   }
-
+  //axios call to get all users
   useEffect(() => {
     axios.get("http://localhost:8080/getusers")
       .then(response => {
@@ -32,40 +31,45 @@ function SignUpModal(props) {
       .catch(e => console.log(e))
   }, [])
 
-  const validation = (e) => {
-    setwhitespacefields(0);
+  //format validations
+  const emailvalidation = (e) => {
     const userEmail = e.target.value
-    if (usernames.filter(username => {
-      return username === userEmail
-    }).length != 0) { setvalidateEmail(false) }
-    else { setvalidateEmail(true) }
-  }
-  const formvalidation = (e) => {
-    if (e.target.form[0].value === "" || !validateEmail) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately") }
-    else if (e.target.form[1].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[2].value === "" || validatephone) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[3].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[4].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[5].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[6].value === "") { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else if (e.target.form[7].value === "" || validatepincode) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-    else {
-      return Promise.resolve("Filled")
+    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (userEmail.match(mailformat)){
+      if (usernames.filter(username => {
+        return username === userEmail
+      }).length !== 0) { setwhitespacefields({ ...whitespacefields, email: { display: true, message: "Username already Exists" } })}
+      else { setwhitespacefields({ ...whitespacefields, email: { display: false, message: "" } }) }
     }
+    else{setwhitespacefields({ ...whitespacefields, email: { display: true, message: "Email format Wrong" } }) }
   }
   const phonevalidation = (e) => {
     var phoneno = /^\d{10}$/;
-    if (!e.target.value.match(phoneno)) { setvalidatephone(true) }
-    else{setvalidatephone(false)}
+    if (!e.target.value.match(phoneno)) {setwhitespacefields({ ...whitespacefields, phonenumber: { display: true, message: "Please Enter a 10 digit PHONE no" } }) }
+    else {setwhitespacefields({ ...whitespacefields, phonenumber: { display: false, message: "" } })  }
 
   }
   const pincodevalidation = (e) => {
     var pinno = /^\d{6}$/;
-    if (!e.target.value.match(pinno)) { setvalidatepincode(true) }
-    else{setvalidatepincode(false)}
+    if (!e.target.value.match(pinno)) {setwhitespacefields({ ...whitespacefields, pincode: { display: true, message: "Please Enter a 6 digit PINCODE" } })}
+    else { setwhitespacefields({ ...whitespacefields, pincode: { display: false, message: "" } })  }
 
   }
-
+  //on submit validation
+  const formvalidation = (e) => {
+    if (e.target.form[0].value === "" || whitespacefields.email.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately") }
+    else if (e.target.form[1].value === "" || whitespacefields.password.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[2].value === "" || whitespacefields.phonenumber.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[3].value === "" || whitespacefields.username.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[4].value === "" || whitespacefields.streetname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[5].value === "" || whitespacefields.cityname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[6].value === "" || whitespacefields.pincode.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else if (e.target.form[7].value === "" || whitespacefields.state.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
+    else {
+      return Promise.resolve("Filled")
+    }
+  }
+  //onsubmit
   const formsubmit = (e) => {
     e.preventDefault();
     console.log(e.target.form[0].value)
@@ -88,14 +92,17 @@ function SignUpModal(props) {
         .then(Response => {
           console.log(Response)
           notify("Sucessfully Registered")
+          props.closesignup()
+          props.openlogin()
         })
     }).catch(e => console.log(e))
   }
+  
   return (
     <>
       <div className='modalBackground'>
         <div className='modalContainer' style={{ height: "550px", width: "700px" }}>
-          <div className='titleCloseBtn'><button onClick={() => { props.closemodal() }}>X</button></div>
+          <div className='titleCloseBtn'><button onClick={() => { props.closesignup() }}>X</button></div>
           <div className='title'>
             Sign up
           </div>
@@ -105,83 +112,87 @@ function SignUpModal(props) {
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
                     <input type="email" className='inputstyle' placeholder="Enter Email"
-                      onChange={(event) => {
-                        validation(event)
-                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, email: true }) }
-                        else { setwhitespacefields({ ...whitespacefields, email: false }) }
-                      }} >
-
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, email: { display: true, message: "Cant leave Email empty" } }) }
+                        else { emailvalidation(event)}
+                      }}
+                    >
                     </input>
-                    {!validateEmail && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>User Email already exists</div>}
-                    {whitespacefields.email && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    {whitespacefields.email.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.email.message}</div>}
                   </div>
                   <div className='col-sm-6 inputconstainerstyle'>
-                    <input type="password" className='inputstyle' onChange={(event) => {
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, password: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, password: false }) }
-                    }} placeholder="Password"></input>
-                    {whitespacefields.password && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    <input type="password" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, password: { display: true, message: "Cant leave Password empty" } }) }
+                        else { setwhitespacefields({ ...whitespacefields, password: { display: false, message: "" } }) }
+                      }}
+                      placeholder="Password"></input>
+                    {whitespacefields.password.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.password.message}</div>}
 
                   </div>
                 </div>
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
-                    <input type="text" className='inputstyle' onChange={(event) => {
-                      phonevalidation(event);
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, phonenumber: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, phonenumber: false }) }
-                    }} placeholder='Phone Number'></input>
-                    {whitespacefields.phonenumber && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
-                    {validatephone && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>must be a number of 10 digits</div>}
+                    <input type="text" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, phonenumber: { display: true, message: "Cant leave Phone Number empty" } }) }
+                        else {phonevalidation(event)}
+                      }}
+                      placeholder='Phone Number'></input>
+                    {whitespacefields.phonenumber.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.phonenumber.message}</div>}
 
                   </div>
                   <div className='col-sm-6 inputconstainerstyle' >
-                    <input type="text" className='inputstyle' onChange={(event) => {
-
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, username: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, username: false }) }
-                    }} placeholder='User Name'></input>
-                    {whitespacefields.username && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    <input type="text" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, username: { display: true, message: "Cant leave User Name empty" } }) }
+                        else { setwhitespacefields({ ...whitespacefields, username: { display: false, message: "" } }) }
+                      }}
+                      placeholder='User Name'></input>
+                    {whitespacefields.username.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.username.message}</div>}
 
                   </div>
                 </div>
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
-                    <input type="text" className='inputstyle' onChange={(event) => {
-
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, streetname: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, streetname: false }) }
-                    }} placeholder='Street Name'></input>
-                    {whitespacefields.streetname && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    <input type="text" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, streetname: { display: true, message: "Cant leave street name empty" } }) }
+                        else { setwhitespacefields({ ...whitespacefields, streetname: { display: false, message: "" } }) }
+                      }}
+                      placeholder='Street Name'></input>
+                    {whitespacefields.streetname.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.streetname.message}</div>}
 
                   </div>
                   <div className='col-sm-6 inputconstainerstyle' >
-                    <input type="text" className='inputstyle' onChange={(event) => {
-
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, cityname: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, cityname: false }) }
-                    }} placeholder='City Name'></input>
-                    {whitespacefields.cityname && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    <input type="text" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, cityname: { display: true, message: "Cant leave city name empty" } }) }
+                        else { setwhitespacefields({ ...whitespacefields, cityname: { display: false, message: "" } }) }
+                      }}
+                      placeholder='City Name'></input>
+                    {whitespacefields.cityname.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.cityname.message}</div>}
 
                   </div>
                 </div>
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
-                    <input type="text" className='inputstyle' onChange={(event) => {
-                      pincodevalidation(event);
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, pincode: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, pincode: false }) }
-                    }} placeholder='Pin Code'></input>
-                    {whitespacefields.pincode && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
-                    {validatepincode && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>must be a number of 6 digits</div>}
+                    <input type="text" className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, pincode: { display: true, message: "Cant leave pincode empty" } }) }
+                        else { pincodevalidation(event) }
+                      }}
+                      placeholder='Pin Code'></input>
+                    {whitespacefields.pincode.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.pincode.message}</div>}
 
                   </div>
                   <div className='col-sm-6 inputconstainerstyle'>
-                    <select className='inputstyle' onChange={(event) => {
-
-                      if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, state: true }) }
-                      else { setwhitespacefields({ ...whitespacefields, state: false }) }
-                    }} defaultValue=''>
+                    <select className='inputstyle'
+                      onBlur={(event) => {
+                        if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, state: { display: true, message: "Cant leave State empty" } }) }
+                        else { setwhitespacefields({ ...whitespacefields, state: { display: false, message: "" } }) }
+                      }}
+                      defaultValue=''>
                       <option className='inputstyle' value=''></option>
                       <option value='Andaman and Nicobar Islands'>Andaman and Nicobar Islands</option>
                       <option value='Andhra Pradesh'>Andhra Pradesh</option>
@@ -219,7 +230,7 @@ function SignUpModal(props) {
                       <option value='Uttar Pradesh'>Uttar Pradesh</option>
                       <option value='West Bengal'>West Bengal</option>
                     </select>
-                    {whitespacefields.state && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>Can't leave this field empty</div>}
+                    {whitespacefields.state.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.state.message}</div>}
 
                   </div>
                 </div>
@@ -231,7 +242,7 @@ function SignUpModal(props) {
           </div >
           <div className='row m-4 justify-content-between'>
             <div className='col-sm-5 ' style={{ color: "white", fontWeight: "600", textShadow: "1px 1px 5px red" }}>Existing User ?</div>
-            <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closemodal(); props.loginmodal(true) }} >Log IN</button>
+            <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closesignup(); props.openlogin() }} >Log IN</button>
           </div>
 
         </div >

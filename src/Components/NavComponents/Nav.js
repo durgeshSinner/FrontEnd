@@ -1,27 +1,37 @@
 import React, { useState } from 'react'
 import '../CSS/Navbar.css'
 import '../CSS/Dropdown.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SignUpModal from './SignUpModal'
 import LoginModal from './LoginModal'
 import { log } from '../../App'
 
 function Nav(props) {
+    //for display of modal for Signup
     const [Signupmodal, setSignupmodal] = useState(false)
+    //for display of modal for login
     const [Loginmodal, setLoginmodal] = useState(false)
 
+    const navigate = useNavigate()
+
+    //functions sent as props
+    const opensignup = () => {
+        setSignupmodal(true)
+    }
+    const openlogin = () => {
+        setLoginmodal(true)
+    }
     const closesignup = () => {
         setSignupmodal(false)
     }
     const closelogin = () => {
         setLoginmodal(false)
     }
-    const [search, setsearch] = useState('')
 
     return (
         <>
-            {Signupmodal && <SignUpModal closemodal={closesignup} loginmodal={setLoginmodal} />}
-            {Loginmodal && <LoginModal closemodal={closelogin} signupmodal={setSignupmodal} userlogged={props.userLogged} setuserLogged={props.setuserLogged} />}
+            {Signupmodal && <SignUpModal closesignup={closesignup} openlogin={openlogin} />}
+            {Loginmodal && <LoginModal closelogin={closelogin} opensignup={opensignup} Loggedin={props.Loggedin} />}
             <div className={'container-fluid'} style={{ backgroundColor: "rgb(187, 137, 235)" }} >
                 <div className='row d-flex justify-content-between'>
                     <div className="col-sm-4 row ">
@@ -35,17 +45,13 @@ function Nav(props) {
                     <div className='col-sm-4'>
                         <div className="input-group mb-2 mt-2"  >
                             <form className='d-flex'>
-                                <input type="text" className="form-control" placeholder="Search Products" onChange={(event) => {
-                                    console.log(event.target.value)
-                                    setsearch(event.target.value)
-                                }} />
-                                {search === "" ?
-                                    <Link to={`/products/${search}`} className="input-group-text" style={{ pointerEvents: "none" }}
-                                    >Go</Link>
-                                    :
-                                    <Link to={`/products/${search}`} className="input-group-text"
-                                    >Go</Link>
-                                }
+                                <input type="text" className="form-control" placeholder="Search Products" />
+                                <button className="input-group-text" onClick={(event) => {
+                                    event.preventDefault();
+                                    const search = event.target.form[0].value
+                                    if (search === "") { return }
+                                    else { navigate(`/products/${search}`) }
+                                }}>Go</button>
                             </form>
                         </div>
                     </div>
@@ -92,11 +98,7 @@ function Nav(props) {
                                     return <div className="col-sm-4">
                                         <li style={{ listStyle: "none" }}>
                                             <Link to="" id="logout" className={"navbar"} onClick={() => {
-                                                localStorage.clear(); props.setuserLogged({
-                                                    logged: false,
-                                                    id: "",
-                                                    role: ""
-                                                })
+                                                localStorage.clear(); props.Loggedout()
                                             }}>Log Out</Link>
                                         </li>
                                     </div>

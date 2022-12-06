@@ -20,20 +20,27 @@ export const log = React.createContext();
 export const Categoriesdata = React.createContext();
 
 function App() {
+  //state for getting categories
   const [categories, Setcategories] = useState([])
+
+  // flag to ensure useeffect runs before rendering
   const [flag, setflag] = useState(false)
+
+  //axios call to get category and subcategory info
   useEffect(() => {
-    console.log("inside")
     axios.get('http://localhost:8080/products/Getcategories')
       .then(res => { Setcategories([...res.data]) })
       .catch(e => console.log(e))
   }, [])
+
+  //toastify 
   const notify = (message) => {
     toast(message);
   }
-
+  
+  //function to determine current user
   const userlogged = () => {
-    if (localStorage.getItem('token') == undefined) {
+    if (localStorage.getItem('token') == null) {
       return false
     }
     else {
@@ -41,13 +48,14 @@ function App() {
     }
   }
 
+  //state declaration of logged user details
   const [userLogged, setuserLogged] = useState({
     logged: userlogged(),
     id: "",
     role: ""
   });
-  console.log(userLogged)
 
+  //to get the info of current user and sets flag to true
   useEffect(() => {
     (async () => {
       const config = {
@@ -56,6 +64,7 @@ function App() {
         }
       }
       if (!userLogged.logged) {
+        setflag(true)
         return;
       }
       else {
@@ -69,7 +78,9 @@ function App() {
         }
         )
           .catch(e => {
-            notify("token Expired"); localStorage.clear(); setuserLogged({
+            notify("Please log In Session Expired")
+            localStorage.clear();
+            setuserLogged({
               logged: false,
               id: "",
               role: ""
@@ -89,13 +100,21 @@ function App() {
     })
     console.log("Logged Out")
   }
+  const Loggedin = (id, role) => {
+    setuserLogged({
+      logged: true,
+      id: id,
+      role: role
+    })
+    console.log("Logged In")
+  }
 
   return (
     <div >
       {flag &&
         <Categoriesdata.Provider value={categories}>
           <log.Provider value={userLogged}>
-            <Nav userlogged={userLogged} setuserLogged={setuserLogged} ></Nav>
+            <Nav Loggedin={Loggedin} Loggedout={Loggedout}></Nav>
 
             <ToastContainer />
             <Routes>

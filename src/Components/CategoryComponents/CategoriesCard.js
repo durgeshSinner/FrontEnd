@@ -4,6 +4,7 @@ import Subcategorycard from './Subcategorycard'
 import SubcategoryProducts from './SubcategoryProducts'
 
 function CategoriesCard(props) {
+    //object for dynamic style changing background
     const categoryimage = {
         width: "auto",
         height: "100px",
@@ -13,29 +14,43 @@ function CategoriesCard(props) {
         backgroundPosition: "center"
 
     }
-    const [subcategory, setsubcategory] = useState(0)
-    const [displaycategory, setdispaycategory] = useState(false)
+    categoryimage.backgroundImage = `${props.url}`
+
+    //to display category and subcategories onHover functions
+    const [subcategory, setsubcategory] = useState({
+        display: false,
+        index: 0
+    }
+    )
+    //to display products of each subcategory onClick
     const [displaysubcategory, setdisplaysubcategory] = useState(false)
 
-
-
-    categoryimage.backgroundImage = `${props.url}`
+    //for arrow functions
     const prevsubcategory = () => {
-        if (subcategory === 0) {
-            setsubcategory(0)
+        if (subcategory.index === 0) {
+            setsubcategory({
+                display: true,
+                index: 0
+            })
         }
         else {
-            setsubcategory(subcategory - 1)
+            let newindex = subcategory.index - 1
+            setsubcategory({ ...subcategory, index: newindex })
         }
     }
     const nextsubcategory = () => {
-        if (subcategory === props.subcategories.length - 1) {
-            setsubcategory(props.subcategories.length - 1)
+        if (subcategory.index === props.subcategories.length - 1) {
+            setsubcategory({
+                display: true,
+                index: props.subcategories.length - 1
+            })
         }
         else {
-            setsubcategory(subcategory + 1)
+            let newindex = subcategory.index + 1
+            setsubcategory({ ...subcategory, index: newindex })
         }
     }
+    //products display
     const showproducts = () => {
         setdisplaysubcategory(true)
         console.log("called")
@@ -47,19 +62,41 @@ function CategoriesCard(props) {
 
     return (
 
-        <div className='container-fluid ' id={`${props.Categoryname}`} style={{ width: "75%", marginLeft: "auto", marginRight: "auto", marginTop: "20px", marginBottom: "20px" }} onMouseLeave={() => { setsubcategory(0); hideproducts() }}>
-            <div className='row category' onMouseLeave={() => { setdispaycategory(false); }} onMouseEnter={() => { setdispaycategory(true); }}>
+        <div className='container-fluid ' id={`${props.Categoryname}`} style={{ width: "75%", marginLeft: "auto", marginRight: "auto", marginTop: "20px", marginBottom: "20px" }}
+            onMouseLeave={() => {
+                setsubcategory({
+                    display: false,
+                    index: 0
+                }); hideproducts()
+            }}
+        >
+            <div className='row category'
+                onMouseLeave={() => {
+                    setsubcategory({
+                        ...subcategory,
+                        display: false
+                    }
+                    )
+                }}
+                onMouseEnter={() => {
+                    setsubcategory({
+                        ...subcategory,
+                        display: true
+                    }
+                    )
+                }}>
                 <div className='col-sm-3 categorycard' >
                     <div>{props.Categoryname}</div>
                     <div className='row justify-content-between' style={categoryimage}></div>
                 </div>
 
                 {
-                    !displaycategory &&
+                    !subcategory.display &&
                     <div className='categoryitems col-sm-4 p-2' >
                     </div>}
                 {
-                    displaycategory && <>
+                    subcategory.display &&
+                    <>
                         <div className='categoryitems row justify-content-end' >
                             <div className='col-sm-9 row justify-content-between p-0'>
                                 <div className='col-sm-1 subcategorycard nexticon'
@@ -69,7 +106,7 @@ function CategoriesCard(props) {
                                     }}
                                     onClick={prevsubcategory}>
                                 </div>
-                                <Subcategorycard url={props.url} subcategories={props.subcategories[subcategory].subcategory} category={props.Categoryname} displayproducts={showproducts} />
+                                <Subcategorycard url={props.url} subcategories={props.subcategories[subcategory.index].subcategory} category={props.Categoryname} displayproducts={showproducts} />
                                 <div className='col-sm-1 subcategorycard nexticon'
                                     style={{
                                         ...categoryimage, backgroundImage: "url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ic_chevron_right_48px.svg/1200px-Ic_chevron_right_48px.svg.png)",
@@ -82,16 +119,13 @@ function CategoriesCard(props) {
 
                     </>
                 }
-
-
             </div>
             <div className='row'>{
                 displaysubcategory &&
-                <SubcategoryProducts categoryname={props.Categoryname} subcategory={props.subcategories[subcategory].subcategory} />
+                <SubcategoryProducts categoryname={props.Categoryname} subcategory={props.subcategories[subcategory.index].subcategory} />
             }
             </div>
         </div>
-
     )
 }
 

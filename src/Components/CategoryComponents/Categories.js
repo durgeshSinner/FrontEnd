@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import CategoriesCard from './CategoriesCard'
 import Categoriesbar from '../CommonComponents/Categoriesbar'
 
 
 function Categories(props) {
-  
+  //each category is mapped to a category card
   return (
     <>
       <Categoriesbar categories={props.categories}/>

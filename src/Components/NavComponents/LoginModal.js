@@ -4,8 +4,10 @@ import '../CSS/Modal.css'
 import '../CSS/Navbar.css'
 
 function LoginModal(props) {
+  //state used to display wrong Credentials
   const [login, setlogin] = useState(true)
 
+  //on submit
   const formsubmit = (e) => {
     e.preventDefault()
     console.log(e.target.form[0].value)
@@ -17,12 +19,8 @@ function LoginModal(props) {
       .then(Response => {
         console.log(Response)
         localStorage.setItem('token', Response.data.token)
-        props.setuserLogged({
-          logged: true,
-          id: Response.data.id,
-          role: Response.data.role
-        })
-        props.closemodal()
+        props.Loggedin(Response.data.id,Response.data.role) 
+        props.closelogin()
 
       })
       .catch(e => { console.log(e); setlogin(false) })
@@ -33,7 +31,7 @@ function LoginModal(props) {
     <>
       <div className='modalBackground'>
         <div className='modalContainer'>
-          <div className='titleCloseBtn'><button onClick={() => { props.closemodal() }}>X</button></div>
+          <div className='titleCloseBtn'><button onClick={() => { props.closelogin() }}>X</button></div>
           <div className='title'>
             Log In
           </div>
@@ -50,7 +48,7 @@ function LoginModal(props) {
           </div>
           <div className='row m-4 justify-content-between'>
             <div className='col-sm-4 ' style={{ color: "white", fontWeight: "600", textShadow: "1px 1px 5px red" }}>Not a User ?</div>
-            <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closemodal(); props.signupmodal(true) }} >Sign up</button>
+            <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closelogin(); props.opensignup() }} >Sign up</button>
           </div>
         </div>
       </div>
