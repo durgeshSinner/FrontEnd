@@ -3,6 +3,7 @@ import '../CSS/OrderModals.css'
 import ReactDom from 'react-dom'
 function Orderprofilemodal(props) {
     let total = 0
+    //for dynamic images
     const productimage = {
         backgroundImage: "",
         backgroundSize: "contain",
@@ -11,7 +12,7 @@ function Orderprofilemodal(props) {
         height: "50px",
         width: "auto"
     }
-
+    //details of orders are passed as props and initila display is set false on click of display summary display made to true and portaled to in profile component in respective ID
     return (
         <>
             {props.displayordersummary &&

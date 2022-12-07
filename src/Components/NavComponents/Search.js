@@ -4,18 +4,24 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import SearchProducts from './SearchProducts'
 
-function Search(props) {
+function Search() {
+    //to get the path params
     const params = useParams()
-    const [Search, setSearch]= useState(params.Search)
+    //search word from path is extracted and assigned 
+    const [Search, setSearch]= useState(params.search)
+
+    //Search related Products
     const [SearchedProducts, setSearchedProducts] = useState([])
+
     useEffect(() => {
         axios.get(`http://localhost:8080/products/search/${params.search}`)
             .then((response) => {
                 setSearchedProducts([...response.data])
+                setSearch(params.search)
             }
             )
     }, [params.search])
-    console.log(SearchedProducts)
+    console.log(Search)
     return (
         <div>
             {SearchedProducts.length==0 ?

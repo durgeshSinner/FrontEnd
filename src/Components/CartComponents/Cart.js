@@ -94,7 +94,6 @@ function Cart() {
   }
   return (
     <>
-      {update.display &&
 
         <>{
           loggeddata.role === "USER" &&
@@ -135,7 +134,7 @@ function Cart() {
           }
 
         </>
-      }
+      
     </>
   )
 }

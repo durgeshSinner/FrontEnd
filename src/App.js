@@ -58,6 +58,7 @@ function App() {
   //to get the info of current user and sets flag to true
   useEffect(() => {
     (async () => {
+      
       const config = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`

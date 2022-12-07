@@ -9,12 +9,15 @@ import { useNavigate } from 'react-router-dom'
 import UserForm from '../NavComponents/UserForm'
 
 function Profile(props) {
+    //navigate used when user logs out redirected to home page
     const navigate = useNavigate()
+    //user context
     const loggeddata = useContext(log)
 
     const notify = (message) => {
         toast(message);
     }
+    //user validation
     const validuser = () => {
         console.log(loggeddata)
         if (!loggeddata.logged) {
@@ -24,17 +27,21 @@ function Profile(props) {
             return Promise.resolve("User Logged")
         }
     }
+    //user role validation
     const validpageuser = () => {
         if (loggeddata.role === "USER") { return Promise.resolve("USER ROLE") }
         else { return Promise.reject("ADMIN ROLE") }
     }
 
-    const [username, setusername] = useState("")
+    //on update the profile data of user need to be fetched.
+    const [update, setupdate] = useState(false)
+    //user data
     const [userdetails, setuserdetails] = useState({
         userName: "",
         userAddress: { city: "", state: "", pincode: "", street: "" },
         userPhone: ""
     })
+    //for loading user profile data after checking the validation of user and his role 
     useEffect(() => {
         const config = {
             headers: {
@@ -46,7 +53,6 @@ function Profile(props) {
                 axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
                     .then(res => {
                         setuserdetails(res.data)
-                        setusername(res.data.userName)
                     })
                     .catch(e => { console.log(e) })
             }).catch(() => {
@@ -57,9 +63,9 @@ function Profile(props) {
             notify("please log in")
             navigate("/")
         })
-    }, [])
-    console.log(userdetails)
-
+        console.log("hi")
+    }, [update])
+    //onsubmit function passed through props and when event is occured the function is read
     const formsubmit = (e, formvalidation) => {
         e.preventDefault();
         const config = {
@@ -69,7 +75,7 @@ function Profile(props) {
         }
         console.log(e.target.form[0].value)
         const user = {
-            userId : loggeddata.id,
+            userId: loggeddata.id,
             userName: e.target.form[1].value,
             userAddress: {
                 city: e.target.form[3].value,
@@ -84,9 +90,9 @@ function Profile(props) {
                 axios.post(`http://localhost:8080/updateprofile`, user, config)
                     .then(res => {
                         console.log(res);
-                        setusername(e.target.form[0].value)
                         notify("Profile Updated")
-                    }).catch(e => { console.log(e) })
+                        setupdate(!update)
+                    }).catch(e => { notify("Unable to Update") })
             })
             .catch(e => console.log(e))
     }
@@ -98,7 +104,7 @@ function Profile(props) {
                     <div id="modalfororderdetails"></div>
                     <div className='row' style={{ height: "100vh" }}>
                         <div className='col-sm-4 profileinfocontainer'>
-                            <div className='profilecontent lablestyle'><div>Hi, {username}</div></div>
+                            <div className='profilecontent lablestyle'><div>Hi, {userdetails.userName}</div></div>
                             <Orders />
                             <Link to="/">
                                 <button className='custombutton' onClick={() => { props.userlog(); localStorage.clear() }}>Log Out</button>

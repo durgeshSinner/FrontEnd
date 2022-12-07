@@ -11,7 +11,7 @@ function SignUpModal(props) {
   //list of current users for duplicate entry userEmail
   const [usernames, setusenames] = useState([])
 
-  //axios call to get all users
+  //axios call to get all users for unique email verification
   useEffect(() => {
     axios.get("http://localhost:8080/getusers")
       .then(response => {
@@ -24,6 +24,7 @@ function SignUpModal(props) {
     toast(message);
   }
 
+  //state for email and password validation
   const [EmailPassValid, setEmailPassValid] = useState({
     email: { display: false, message: "" },
     password: { display: false, message: "" }
@@ -40,7 +41,8 @@ function SignUpModal(props) {
     }
     else { setEmailPassValid({ ...EmailPassValid, email: { display: true, message: "Email format Wrong" } }) }
   }
-  //onsubmit
+  //onsubmit function passed through props and when event is occured the function is read
+  //it takes a call back function which is provided in child component
   const formsubmit = (e, formvalidation) => {
     e.preventDefault();
     console.log(e.target.form[0].value)
@@ -70,6 +72,7 @@ function SignUpModal(props) {
       })
       .catch(e => console.log(e))
   }
+  //passed as props required by child component
   const details = {
     userName: "",
     userAddress: { city: "", state: "", pincode: "", street: "" },
@@ -113,9 +116,9 @@ function SignUpModal(props) {
 
             </form >
           </div >
-          <div className='row m-1 justify-content-between' style={{position :"absolute",bottom : 0, right : 0}}>
+          <div className='row m-1 justify-content-between' style={{position :"absolute",bottom : 0, left : "calc( 50% - 100px )"}}>
             <div className='col-sm-5 ' style={{ color: "white", fontWeight: "600", textShadow: "1px 1px 5px red" }}>Existing User ?</div>
-            <button className="custombutton col-sm-6" style={{ height: "25px" }} id='cancelBtn' onClick={() => { props.closesignup(); props.openlogin() }} >Log IN</button>
+            <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closesignup(); props.openlogin() }} >Log IN</button>
           </div>
         </div >
       </div >
