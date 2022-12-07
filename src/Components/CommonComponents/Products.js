@@ -5,25 +5,32 @@ import { useState, useEffect, useContext } from 'react'
 import Custombutton from '../Custombutton'
 import Addtocart from './Addtocart'
 import Categoriesbar from './Categoriesbar'
-import {Categoriesdata} from '../../App'
+import { Categoriesdata } from '../../App'
 import { log } from '../../App'
+import { useNavigate } from 'react-router-dom'
 
 
 
 function Products() {
+  const navigate = useNavigate()
   const loggeddata = useContext(log)
   const params = useParams()
   const Id = params.Id
   const [product, setproduct] = useState({})
+
   useEffect(() => {
     axios.get(`http://localhost:8080/products/getById/${Id}`)
       .then(response => setproduct(response.data))
-      .catch(error => console.log(error))
+      .catch(error => {
+        if (error.response.status === 400) { navigate("*") }
+        else { console.log(error) }
+      }
+      )
   }, [])
   console.log(loggeddata)
 
   return (
-    
+
     <div style={{ backgroundColor: "rgb(250, 243, 234)", height: "100vh" }}>
       <Categoriesdata.Consumer>{
         data => {
@@ -54,7 +61,7 @@ function Products() {
         </div>
         <div className='row'>
           <div className='d-flex justify-content-center col-sm-5 mt-3' >
-            {loggeddata.role !=="ADMIN" && <Addtocart ProductId={Id} /> }
+            {loggeddata.role !== "ADMIN" && <Addtocart ProductId={Id} />}
           </div>
           <div className='col-sm-7' style={{ paddingLeft: "15%" }}>
             <Link to="/categories"><Custombutton className="col-sm-3" message="....Back To Categories...." /></Link>

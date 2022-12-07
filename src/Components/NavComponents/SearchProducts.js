@@ -37,7 +37,9 @@ function SearchProducts(props) {
             products: [...props.SearchedProducts]
             
         }).then(response => {
-            setproducts(response.data)
+            if(response.status===200){setproducts([...response.data])}
+            else if(response.status===204){setproducts([])}
+            
         })
             .catch(e => { console.log(e) })
     }, [filters, props.SearchedProducts, props.Search])
@@ -66,7 +68,7 @@ function SearchProducts(props) {
                 </div>
                 <div className='col-sm-8 row productContainer'>
                     {products.length == 0 ?
-                        < div className='fluid-container bg-danger text-center'>No Results for your Search</div>
+                        < div className='fluid-container bg-warning text-center'>No Results for your Search</div>
                         :
                         products.map(product => <ProductCard ProductName={product.productName} url={product.url}
                             key={product.productId} Id={product.productId}

@@ -29,8 +29,8 @@ function OrderSummary(props) {
         }
         axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
             .then(res => {
-                console.log([...res.data.products])
-                setcartItems([...res.data.products])
+                if (res.status === 200) { setcartItems([...res.data.products]) }
+                else if (res.status === 204) { setcartItems([]) }
             })
             .catch(e => console.log(e))
     }, [props.displayordermodal])

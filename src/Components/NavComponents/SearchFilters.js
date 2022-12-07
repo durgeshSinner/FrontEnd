@@ -17,11 +17,15 @@ function SearchFilters(props) {
     const [out, setout] = useState(
         false
     )
-
+    //resetting filters on change in Search 
     useEffect(() => {
-        (async () => { setcompcategory(""); setout(false) })()
+        (async () => { setcompcategory(""); 
+        setmaxprice(100);
+        setminprice(0);
+        setout(false);
+         props.updatefilters("", "", 0, 100) })()
             .then(() => {
-                props.updatefilters("", "", 0, 100)
+
                 setout(true)
             })
 

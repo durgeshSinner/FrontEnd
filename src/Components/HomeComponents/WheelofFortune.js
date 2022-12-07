@@ -58,7 +58,14 @@ function WheelofFortune() {
     const spinthewheel = () => {
         if (localStorage.getItem("token") == null) { return notify("Please Log IN"); }
         else {
-            const randomnumber = Math.random() * 5000
+            let j=0
+            let randomnumber
+            while(j==0){
+                randomnumber=  Math.random() * 5000
+                if(randomnumber>2500){j++}
+                else{j=0}
+            }
+            
             setpointer({ ...pointer, transition: "transform 3s ease-out", transform: `rotate(${randomnumber}deg)` })
             setTimeout(reset, 3000)
             let offernumber = Math.round([(randomnumber / 360) - Math.floor(randomnumber / 360)] * 360)

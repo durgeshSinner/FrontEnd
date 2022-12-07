@@ -16,7 +16,8 @@ function Search() {
     useEffect(() => {
         axios.get(`http://localhost:8080/products/search/${params.search}`)
             .then((response) => {
-                setSearchedProducts([...response.data])
+                if(response.status===200){setSearchedProducts([...response.data])}
+                else if(response.status===204){setSearchedProducts([])}
                 setSearch(params.search)
             }
             )
@@ -25,7 +26,7 @@ function Search() {
     return (
         <div>
             {SearchedProducts.length==0 ?
-                <div className='fluid-container bg-danger text-center'>No Results for your Search</div>
+                <div className='fluid-container bg-warning text-center'>No Results for your Search</div>
                 :
                 <SearchProducts SearchedProducts={SearchedProducts} Search={Search}/>
             }

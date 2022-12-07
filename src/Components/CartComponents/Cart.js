@@ -65,7 +65,9 @@ function Cart() {
       validpageuser().then(() => {
         axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
           .then(res => {
-            setcartItems([...res.data.products])
+            console.log(res)
+            if(res.status===200){setcartItems([...res.data.products])}
+            else if(res.status===204){setcartItems([]);}
           }).catch(e => { notify("unable to get Cart") })
       })
         .catch(() => {

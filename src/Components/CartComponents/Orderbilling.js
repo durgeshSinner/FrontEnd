@@ -56,7 +56,7 @@ function Orderbilling(props) {
 
                             axios.get(`http://localhost:8080/order/${loggeddata.id}/createorder`, config)
                                 .then(response => { notify("order placed"); props.closebilling(); props.updatefunction(); console.log(response) })
-                                .catch(error => { console.log(error) })
+                                .catch(error => { notify("Unable to place Order") })
                         }} >PLACE ORDER</button>
                     </div>
                     <div className='m-4 ordercontainerfooter d-flex justify-content-between'>

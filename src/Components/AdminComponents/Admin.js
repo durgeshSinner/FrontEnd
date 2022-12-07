@@ -137,7 +137,7 @@ function Admin() {
                                             url: event.target.form[6].value
                                         }, config).then(() => notify("Product Added Sucessfully"))
                                     })
-                                    .catch((e) => { console.log(e) })
+                                    .catch(() => { notify("Product unable to Add")})
 
 
                             }}> Submit</button></div>
@@ -210,7 +210,7 @@ function Admin() {
                                             url: event.target.form[6].value
                                         }, config).then(() => notify("Product Updated Sucessfully"))
                                     })
-                                    .catch((e) => { console.log(e) })
+                                    .catch((e) => { notify("Unable to Update Product") })
 
 
                             }}> Submit</button></div>
