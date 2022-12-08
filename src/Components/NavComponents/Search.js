@@ -25,7 +25,7 @@ function Search() {
     console.log(Search)
     return (
         <div>
-            {SearchedProducts.length==0 ?
+            {SearchedProducts.length===0 ?
                 <div className='fluid-container bg-warning text-center'>No Results for your Search</div>
                 :
                 <SearchProducts SearchedProducts={SearchedProducts} Search={Search}/>

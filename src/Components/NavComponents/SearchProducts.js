@@ -67,7 +67,7 @@ function SearchProducts(props) {
                     <SearchFilters category="" updatefilters={updatefilters} filters={filters} SearchedProducts={props.SearchedProducts} Search={props.Search}/>
                 </div>
                 <div className='col-sm-8 row productContainer'>
-                    {products.length == 0 ?
+                    {products.length === 0 ?
                         < div className='fluid-container bg-warning text-center'>No Results for your Search</div>
                         :
                         products.map(product => <ProductCard ProductName={product.productName} url={product.url}

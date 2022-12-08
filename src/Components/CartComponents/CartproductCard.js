@@ -76,7 +76,7 @@ function CartproductCard(props) {
                     <form >
                         <div className='row d-flex justify-content-start'>
                             <div>
-                                {Quantity != 0 && //flag for Quantity to get updated from useEffect
+                                {Quantity !== 0 && //flag for Quantity to get updated from useEffect
                                     <>
                                         <label >Quantity:</label>
                                         <select className='selectstyle' id="quantity" name="quantity" defaultValue={Quantity}>

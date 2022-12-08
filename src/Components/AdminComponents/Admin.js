@@ -105,7 +105,7 @@ function Admin() {
                                             <Categoriesdata.Consumer>{
                                                 data => {
                                                     const array = data.filter(item => {
-                                                        if (item.category == addcategory) { return true }
+                                                        if (item.category === addcategory) { return true }
                                                         else { return false }
                                                     });
                                                     return array[0].subcategory.map(item => <option value={item.subcategory} key={item.subcategory}>{item.subcategory}</option>)
@@ -177,7 +177,7 @@ function Admin() {
                                             <Categoriesdata.Consumer>{
                                                 data => {
                                                     const array = data.filter(item => {
-                                                        if (item.category == modcategory) { return true }
+                                                        if (item.category === modcategory) { return true }
                                                         else { return false }
                                                     });
                                                     return array[0].subcategory.map(item => <option value={item.subcategory} key={item.subcategory}>{item.subcategory}</option>)

@@ -58,7 +58,7 @@ function SearchFilters(props) {
                                         <Categoriesdata.Consumer>{
                                             data => {
                                                 const array = data.filter(item => {
-                                                    if (item.category == compcategory) { return true }
+                                                    if (item.category === compcategory) { return true }
                                                     else { return false }
                                                 });
                                                 return array[0].subcategory.map(item => <option value={item.subcategory} key={item.subcategory}>{item.subcategory}</option>)
@@ -80,7 +80,7 @@ function SearchFilters(props) {
                             <>
                                 <button className='custombutton' onClick={(event) => {
                                     event.preventDefault();
-                                    if (rangedisplay == true) { setrangedisplay(false) }
+                                    if (rangedisplay === true) { setrangedisplay(false) }
                                     else { setrangedisplay(true) };
                                 }}>Set Min Price</button>
                                 <input type="range" className='filterrange m-2' name="vol" defaultValue={0}
@@ -92,7 +92,7 @@ function SearchFilters(props) {
                             <>
                                 <button className='custombutton' onClick={(event) => {
                                     event.preventDefault();
-                                    if (rangedisplay == true) { setrangedisplay(false) }
+                                    if (rangedisplay === true) { setrangedisplay(false) }
                                     else { setrangedisplay(true) };
                                 }}>Set Max Price</button>
                                 <input type="range" className='filterrange m-2' defaultValue={0} name="vol" min="0" max="100" style={{ position: "absolute", backgroundColor: "#d3d3d3" }}></input>
