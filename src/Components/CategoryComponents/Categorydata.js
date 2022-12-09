@@ -1,7 +1,7 @@
 import React from 'react'
 import Categories from './Categories'
 import {Categoriesdata} from '../../App'
-// '/category' route paarent element
+// '/category' route parent element
 function Categorydata() {
    
     return (

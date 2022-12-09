@@ -43,6 +43,7 @@ function Profile(props) {
     })
     //for loading user profile data after checking the validation of user and his role 
     useEffect(() => {
+        let subscribed = true
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -50,11 +51,13 @@ function Profile(props) {
         }
         validuser().then(() => {
             validpageuser().then(() => {
-                axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
-                    .then(res => {
-                        setuserdetails(res.data)
-                    })
-                    .catch(e => { console.log(e) })
+                if (subscribed) {
+                    axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
+                        .then(res => {
+                            setuserdetails(res.data)
+                        })
+                        .catch(e => { console.log(e) })
+                }
             }).catch(() => {
                 notify("Can not perform USER actions")
                 navigate("/")
@@ -63,7 +66,10 @@ function Profile(props) {
             notify("please log in")
             navigate("/")
         })
-        console.log("hi")
+        return () => {
+            subscribed=false
+            console.log("cleaned up")
+        }
     }, [update])
     //onsubmit function passed through props and when event is occured the function is read
     const formsubmit = (e, formvalidation) => {

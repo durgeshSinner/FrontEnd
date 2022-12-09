@@ -25,14 +25,12 @@ function Cart() {
   const [displayorderbilling, setdisplayorderbilling] = useState(false)
 
   //flag to make render wait until the states ae updated
-  const [update, setupdate] = useState({
-    updated: false,
-    display: true
-  })
+  const [update, setupdate] = useState(false)
+
   //just to make  state updated
   const updatefunction = () => {
-    if (update.updated) { setupdate({ ...update, updated: false }) }
-    else { setupdate({ ...update, updated: true }) }
+    if (update) { setupdate(false) }
+    else { setupdate(true) }
   }
 
   const notify = (message) => {
@@ -54,21 +52,32 @@ function Cart() {
     if (loggeddata.role === "USER") { return Promise.resolve("USER ROLE") }
     else { return Promise.reject("ADMIN ROLE") }
   }
-
   useEffect(() => {
+
+    const controller = new AbortController();
+    let subscribed = true
     const config = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
+      },
+      signal: controller.signal
     }
     validuser().then(() => {
+      // setdisplay(false);
       validpageuser().then(() => {
-        axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
-          .then(res => {
-            console.log(res)
-            if(res.status===200){setcartItems([...res.data.products])}
-            else if(res.status===204){setcartItems([]);}
-          }).catch(e => { notify("unable to get Cart") })
+        if (subscribed) {
+          axios.get(`http://localhost:8080/cart/${loggeddata.id}/getCart`, config)
+            .then(res => {
+              if (res.status === 200) { setcartItems([...res.data.products]) }
+              else if (res.status === 204) { setcartItems([]); }
+            })
+            // .then(() => { setdisplay(true)})
+            .catch(e => {
+              if (e.request.status === 0) { notify("server not responding") }
+              else { notify("unable to fetch Cart") }
+              console.log(e)
+            })
+        }
       })
         .catch(() => {
           notify("Can not perform USER actions")
@@ -78,6 +87,13 @@ function Cart() {
       notify("please log in")
       navigate("/")
     })
+
+    return () => {
+      subscribed = false
+      console.log("Cart Component unmounted");
+      controller.abort();
+
+    }
   }, [update])
 
   //modal open and close functions
@@ -95,48 +111,46 @@ function Cart() {
     setdisplayordermodal(true)
   }
   return (
+
     <>
+      <>{
+        loggeddata.role === "USER" &&
+        <>
+          < OrderSummary displayordermodal={displayordermodal} closeorders={closeorders} openbilling={openbilling} cartItems={cartItems} />
+          <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} updatefunction={updatefunction} />
+          <div className='container' >
+            <div className='cartheader'>CART</div>
+            <div className='cartcontent row d-flex justify-content-around'>
+              {
+                cartItems.length === 0 ?
+                  <>
+                    <div className='bg-warning text-center'>Empty Cart !!!! Feels Bad...</div>
+                    <div className='cartheader' style={{ backgroundColor: "white" }}><button className='custombutton'
+                      onClick={() => { navigate("/categories") }}
+                      style={{ backgroundColor: "#2EE59D", width: "300px", height: "45px" }}>GO SHOP</button> </div>
+                  </>
+                  :
+                  <>
+                    {
+                      cartItems.map(cartitem =>
+                        <CartproductCard ProductName={cartitem.product.productName} category={cartitem.product.productCategory} subCategory={cartitem.product.productSubCategory}
+                          Price={cartitem.product.productPrice} key={cartitem.product.productId} Id={cartitem.product.productId}
+                          url={cartitem.product.url} Quantity={cartitem.quantity} updatefunction={updatefunction} />
+                      )
+                    }
+                    <div className='cartheader' style={{ backgroundColor: "white" }}><button className='custombutton'
+                      onClick={() => { setdisplayordermodal(true) }}
+                      style={{ backgroundColor: "#2EE59D", width: "300px", height: "45px" }}> PLACE ORDER</button> </div>
 
-        <>{
-          loggeddata.role === "USER" &&
-          <>
-            < OrderSummary displayordermodal={displayordermodal} closeorders={closeorders} openbilling={openbilling} />
-            <Orderbilling closebilling={closebilling} displayorderbilling={displayorderbilling} openorders={openorders} updatefunction={updatefunction} />
-            <div className='container' >
-              <div className='cartheader'>CART</div>
-              <div className='cartcontent row d-flex justify-content-around'>
-                {
-                  cartItems.length === 0 ?
-                    <>
-                      <div className='bg-warning text-center'>Empty Cart !!!! Feels Bad...</div>
-
-                    </>
-                    :
-                    <>
-                      {
-                        cartItems.map(cartitem =>
-                          <CartproductCard ProductName={cartitem.product.productName} category={cartitem.product.productCategory} subCategory={cartitem.product.productSubCategory}
-                            Price={cartitem.product.productPrice} key={cartitem.product.productId} Id={cartitem.product.productId}
-                            url={cartitem.product.url} Quantity={cartitem.quantity} updatefunction={updatefunction} />
-                        )
-                      }
-                    </>
-                }
-              </div>
-              <div className='cartheader' style={{ backgroundColor: "white" }}><button className='custombutton'
-                onClick={() => { setdisplayordermodal(true) }}
-                style={{ backgroundColor: "#2EE59D", width: "300px", height: "45px" }}> PLACE ORDER</button> </div>
-
+                  </>
+              }
             </div>
-          </>
 
-        }
-          {loggeddata.role === "ADMIN" &&
-            <div className='bg-warning'>ADMIN does not have this Functionality</div>
-          }
-
+          </div>
         </>
-      
+
+      }
+      </>
     </>
   )
 }

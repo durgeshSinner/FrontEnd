@@ -1,8 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import ProductCard from '../CommonComponents/ProductCard'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SubcategoryProducts(props) {
+    const notify = (message) => {
+        toast(message); //toastify alert
+    }
+
     //dynamic styling of backimage object
     const categoryimage = {
         width: "auto",
@@ -20,9 +26,25 @@ function SubcategoryProducts(props) {
     const [Products, setProducts] = useState([])
     useEffect(() => {
         setcurrent(0)
-        axios.get(`http://localhost:8080/products/${props.categoryname}/${props.subcategory}`)
-            .then(response => setProducts(response.data))
-            .catch(error => console.log(error))
+        let Subscribed = true
+        const Controller = new AbortController();
+        if (Subscribed) {
+            axios.get(`http://localhost:8080/products/${props.categoryname}/${props.subcategory}`, { signal: Controller.signal })
+                .then(response => {setProducts(response.data)})
+                .catch(error => {
+                    if (error.request.status === 0) {
+                        if (error.code === "ERR_CANCELED") {}
+                        else { notify("unable to connect to server") }
+                    }
+                    else { console.log(error) }
+                })
+        }
+        return ()=>{
+            Subscribed=false
+            console.log("Unmounted SubcategoryProducts")
+            Controller.abort();
+        }
+
     }, [props.subcategory])
 
     //to display only 3 like a carausel display count

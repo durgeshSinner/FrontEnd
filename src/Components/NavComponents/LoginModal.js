@@ -2,8 +2,13 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import '../CSS/Modal.css'
 import '../CSS/Navbar.css'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function LoginModal(props) {
+  const notify = (message) => {
+    toast(message); //toastify alert
+  }
   //state used to display wrong Credentials
   const [login, setlogin] = useState(true)
 
@@ -19,11 +24,14 @@ function LoginModal(props) {
       .then(Response => {
         console.log(Response)
         localStorage.setItem('token', Response.data.token)
-        props.Loggedin(Response.data.id,Response.data.role) 
+        props.Loggedin(Response.data.id, Response.data.role)
         props.closelogin()
 
       })
-      .catch(e => { console.log(e); setlogin(false) })
+      .catch(e => {
+        if (e.request.status === 0) { notify("unable to connect to server") }
+        else { console.log(e); setlogin(false) }
+      })
 
   }
 

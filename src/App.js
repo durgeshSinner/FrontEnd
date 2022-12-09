@@ -30,14 +30,17 @@ function App() {
   useEffect(() => {
     axios.get('http://localhost:8080/products/Getcategories')
       .then(res => { Setcategories([...res.data]) })
-      .catch(e => console.log(e))
+      .catch(e => {
+        if (e.request.status === 0) { notify("unable to connect to server") }
+        else { console.log(e) }
+      })
   }, [])
 
   //toastify 
   const notify = (message) => {
     toast(message);
   }
-  
+
   //function to determine current user
   const userlogged = () => {
     if (localStorage.getItem('token') == null) {
@@ -58,7 +61,7 @@ function App() {
   //to get the info of current user and sets flag to true
   useEffect(() => {
     (async () => {
-      
+
       const config = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -78,15 +81,18 @@ function App() {
           setflag(true)
         }
         )
-          .catch(e => {
-            notify("Please log In Session Expired")
-            localStorage.clear();
-            setuserLogged({
-              logged: false,
-              id: "",
-              role: ""
-            })
-            setflag(true)
+          .catch(error => {
+            if (error.request.status === 0) { notify("unable to connect to server") }
+            else {
+              notify("Please log In Session Expired")
+              localStorage.clear();
+              setuserLogged({
+                logged: false,
+                id: "",
+                role: ""
+              })
+              setflag(true)
+            }
           })
       }
     })()

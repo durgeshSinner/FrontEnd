@@ -11,7 +11,7 @@ function Admin() {
     //component only for ADMIN ROLE
 
     const navigate = useNavigate()
-    const loggeddata = useContext(log) 
+    const loggeddata = useContext(log)
     //Context of User details 
     //loggeddata.logged bolean value if a user if logged or not
     //loggeddata.Id  | if logged users Id  else ""
@@ -137,7 +137,10 @@ function Admin() {
                                             url: event.target.form[6].value
                                         }, config).then(() => notify("Product Added Sucessfully"))
                                     })
-                                    .catch(() => { notify("Product unable to Add")})
+                                    .catch((error) => {
+                                        if (error.request.status === 0) { notify("unable to connect to server") }
+                                        else { notify("Product unable to be Added") }
+                                    })
 
 
                             }}> Submit</button></div>

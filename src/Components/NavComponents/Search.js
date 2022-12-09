@@ -2,36 +2,154 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import SearchProducts from './SearchProducts'
+import ProductCard from '../CommonComponents/ProductCard'
+import { Categoriesdata } from '../../App'
+import '../CSS/Inputs.css'
+import SearchFilters from './SearchFilters'
+import Categoriesbar from '../CommonComponents/Categoriesbar'
+import { useLocation } from "react-router-dom";
 
-function Search() {
-    //to get the path params
+function ProductSearch(props) {
+    const history = useLocation();
+    let products = []
+    
     const params = useParams()
-    //search word from path is extracted and assigned 
-    const [Search, setSearch]= useState(params.search)
-
-    //Search related Products
+    const [Search, setSearch] = useState()
+    const [status, setstatus] = useState()
     const [SearchedProducts, setSearchedProducts] = useState([])
+    const [filters, setfilters] = useState({
+        category: "",
+        subCategory: "",
+        minPrice: "0",
+        maxPrice: "100"
+    })
+    const updatefilters = (category, subCategory, minPrice, maxPrice) => {
+        setfilters({
+            category: category,
+            subCategory: subCategory,
+            minPrice: minPrice,
+            maxPrice: maxPrice
+        })
+    }
+    const updateproducts = async (products) => {
+        await axios.post(`http://localhost:8080/products/getFilteredProducts`, {
+            category: filters.category,
+            subCategory: filters.subCategory,
+            minPrice: filters.minPrice,
+            maxPrice: filters.maxPrice,
+            products: products
 
+        }).then((response) => {
+            if (response.status === 200) {
+                setSearchedProducts([...response.data]);
+                return Promise.resolve("Search Products updated");
+            }
+            else if (response.status === 204) {
+                setSearchedProducts([]);
+                return Promise.resolve("Search Products null");
+            }
+        })
+    }
+    let fetchsearch = true;
+    console.log(history.pathname.substring(10))
     useEffect(() => {
-        axios.get(`http://localhost:8080/products/search/${params.search}`)
-            .then((response) => {
-                if(response.status===200){setSearchedProducts([...response.data])}
-                else if(response.status===204){setSearchedProducts([])}
+        let filtersearch = true;
+        // setSearch(params.search)
+        (async () => {
+            setstatus("loading")
+            if (Search !== history.pathname.substring(10)) {
+                updatefilters("", "", 0, 100)
                 setSearch(params.search)
+                await axios.get(`http://localhost:8080/products/search/${params.search}`)
+                    .then((response) => {
+                        console.log("inside")
+                        if (response.status === 200) {
+                            fetchsearch = false;
+                            products = response.data
+                            console.log(response.data)
+                            return Promise.resolve("sucess")
+                        }
+                        else if (response.status === 204) {
+                            fetchsearch = false;
+                            products=[]
+                            return Promise.resolve("sucess");
+                        }
+                    }
+                    )
+                    .catch(e => {
+                        console.log(e)
+                    })
             }
-            )
-    }, [params.search])
-    console.log(Search)
+            else {
+                return Promise.reject("in the same search")
+            }
+        })()
+            .then(() => {
+                if (filtersearch) {
+                    if (products.length === 0) {console.log("none"); setstatus("none") }
+                    else {
+                        updateproducts(products).then(() => {
+                            console.log("update status");
+                            setstatus("done")
+                        })
+                    }
+                }
+                else { console.log("something went wrong") }
+            })
+            .catch(() => {
+                if (filtersearch) {
+                    if (SearchedProducts.length === 0) {console.log("none"); setstatus("none") }
+                    else {
+                        updateproducts(SearchedProducts).then(() => {
+                            console.log("update status");
+                            setstatus("done")
+                        })
+                    }
+                }
+                else { console.log("something went wrong") }
+            })
+
+        return () => {
+            // filtersearch = false
+            console.log("unmounted")
+        }
+    }, [params.search, filters])
     return (
-        <div>
-            {SearchedProducts.length===0 ?
-                <div className='fluid-container bg-warning text-center'>No Results for your Search</div>
-                :
-                <SearchProducts SearchedProducts={SearchedProducts} Search={Search}/>
+        // <>{props.Status === "done" &&
+        <>
+            <Categoriesdata.Consumer>{
+                data => {
+                    return <Categoriesbar categories={data} />
+                }
             }
-        </div>
+            </Categoriesdata.Consumer>
+
+            <div className='container-fluid row '>
+                <div className='col-sm-3 productFilter justify-content-center'>
+                    <SearchFilters updatefilters={updatefilters} filters={filters} />
+                </div>
+                {status === "loading" &&
+                    <div className='col-sm-8 text-center bg-warning'>Loading ...</div>}
+                {status === "done" &&
+                    <div className='col-sm-8 row productContainer'>
+                        {SearchedProducts.length === 0 ?
+                            < div className='fluid-container bg-warning text-center'>No Results for your Filters on Search</div>
+                            :
+                            SearchedProducts.map(product => <ProductCard ProductName={product.productName} url={product.url}
+                                key={product.productId} Id={product.productId}
+                                category={product.productCategory}
+                                subCategory={product.productSubCategory} Price={product.productPrice} />)
+                        }
+                    </div>
+                }
+                {status == "none" &&
+                    <div className='col-sm-8 text-center bg-danger'>No Products related to your search</div>
+                }
+            </div>
+        </>
+        // }
+        // </>
     )
 }
 
-export default Search
+export default ProductSearch

@@ -8,6 +8,8 @@ import Categoriesbar from './Categoriesbar'
 import { Categoriesdata } from '../../App'
 import { log } from '../../App'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -17,17 +19,33 @@ function Products() {
   const params = useParams()
   const Id = params.Id
   const [product, setproduct] = useState({})
+  const notify = (message) => {
+    toast(message); //toastify alert
+  }
+
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/products/getById/${Id}`)
-      .then(response => setproduct(response.data))
-      .catch(error => {
-        if (error.response.status === 400) { navigate("*") }
-        else { console.log(error) }
-      }
-      )
+
+    let subscribed = true
+    const controller = new AbortController();
+    if (subscribed) {
+      axios.get(`http://localhost:8080/products/getById/${Id}`)
+        .then(response => setproduct(response.data))
+        .catch(error => {
+          if (error.response.status === 400) { navigate("*") }
+          else if (error.request.status === 0) {
+            if (error.code === "ERR_CANCELED") { }
+            else { notify("unable to connect to server") }
+          }
+          else { console.log(error) }
+        })
+    }
+    return ()=>{
+      subscribed=false
+      controller.abort();
+      console.log("unmounted Products")
+    }
   }, [])
-  console.log(loggeddata)
 
   return (
 

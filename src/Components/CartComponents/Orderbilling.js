@@ -12,14 +12,35 @@ function Orderbilling(props) {
     const [user, setuser] = useState({})
     // fetch user details by axios call
     useEffect(() => {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
+        let subscribed = true
+        const controller = new AbortController();
+
+        (async () => {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                },
+                signal: controller.signal
             }
+            if (subscribed) {
+                await axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
+                    .then(Response => { setuser(Response.data); console.log(Response) }
+                    )
+                    .catch(error => {
+                        if (error.request.status === 0) {
+                            if (error.code === "ERR_CANCELED") { console.log("aborted") }
+                            else { notify("server not responding") }
+                        }
+                        else { notify("unable to fetch Cart") }
+                    });
+            }
+        })();
+
+        return () => {
+            subscribed = false
+            console.log("Orderbiling Unmounted")
+            controller.abort()
         }
-        axios.get(`http://localhost:8080/getprofile/${loggeddata.id}`, config)
-            .then(Response => setuser(Response.data))
-            .catch(e => console.log(e))
     }, [])
     const notify = (message) => {
         toast(message);

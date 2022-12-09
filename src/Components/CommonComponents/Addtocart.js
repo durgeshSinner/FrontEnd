@@ -26,9 +26,9 @@ function Addtocart(props) {
             axios.get(`http://localhost:8080/cart/${loggeddata.id}/add/${props.ProductId}`,
                 config)
                 .then(res => { console.log(res); notify("Item Added") })
-                .catch(e => {
-                    notify("Unable to Add to Cart") 
-                    console.log(e.response.status);
+                .catch(error => {
+                    if (error.request.status === 0) { notify("unable to connect to server") }
+                    else { notify("unable To add to cart") }
                 })
 
             console.log("logged in")

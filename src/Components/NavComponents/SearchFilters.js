@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React  from 'react'
 import { useState } from 'react'
 import { Categoriesdata } from '../../App'
 import '../CSS/Navbar.css'
+import { useParams } from 'react-router-dom'
 import '../CSS/Inputs.css'
 
 function SearchFilters(props) {
+    const params = useParams()
+
     //to change the range display from setting min price to setting max price
     const [rangedisplay, setrangedisplay] = useState(true)
     // to display range input
@@ -15,22 +18,8 @@ function SearchFilters(props) {
     const [compcategory, setcompcategory] = useState("")
     //to make the component update after useeffect is done
     const [out, setout] = useState(
-        false
+        true
     )
-    //resetting filters on change in Search 
-    useEffect(() => {
-        (async () => { setcompcategory(""); 
-        setmaxprice(100);
-        setminprice(0);
-        setout(false);
-         props.updatefilters("", "", 0, 100) })()
-            .then(() => {
-
-                setout(true)
-            })
-
-    }, [props.Search])
-
     return (
         <>{out &&
             <div>
@@ -42,7 +31,7 @@ function SearchFilters(props) {
                                 event.preventDefault();
                                 setcompcategory(event.target.value)
                             }}>
-                                <option value={props.category} selected>{props.category}</option>
+                                <option value={""} defaultValue></option>
                                 <Categoriesdata.Consumer>{
                                     data => { return data.map(category => <option value={category.category} key={category.category} >{category.category}</option>) }
                                 }
@@ -104,7 +93,6 @@ function SearchFilters(props) {
                     <div>
                         <button className='custombutton' style={{ width: "100%" }} onClick={(event) => {
                             event.preventDefault();
-                            console.log(event)
                             if (compcategory === "") {
                                 props.updatefilters("", "", event.target.form[2].value, event.target.form[3].value)
                             }

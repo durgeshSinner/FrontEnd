@@ -70,7 +70,10 @@ function SignUpModal(props) {
             props.openlogin()
           })
       })
-      .catch(e => console.log(e))
+      .catch(e => {
+        if (e.request.status === 0) { notify("unable to connect to server") }
+        else { console.log(e); }
+      })
   }
   //passed as props required by child component
   const details = {
@@ -116,7 +119,7 @@ function SignUpModal(props) {
 
             </form >
           </div >
-          <div className='row m-1 justify-content-between' style={{position :"absolute",bottom : 0, left : "calc( 50% - 100px )"}}>
+          <div className='row m-1 justify-content-between' style={{ position: "absolute", bottom: 0, left: "calc( 50% - 100px )" }}>
             <div className='col-sm-5 ' style={{ color: "white", fontWeight: "600", textShadow: "1px 1px 5px red" }}>Existing User ?</div>
             <button className="custombutton col-sm-6" style={{ height: "30px" }} id='cancelBtn' onClick={() => { props.closesignup(); props.openlogin() }} >Log IN</button>
           </div>
