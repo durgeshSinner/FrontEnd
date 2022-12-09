@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ProductCard from '../CommonComponents/ProductCard'
 import { Categoriesdata } from '../../App'
 import '../CSS/Inputs.css'
@@ -11,12 +11,17 @@ import { useLocation } from "react-router-dom";
 
 function ProductSearch(props) {
     const history = useLocation();
-    let products = []
-    
+
     const params = useParams()
     const [Search, setSearch] = useState()
     const [status, setstatus] = useState()
-    const [SearchedProducts, setSearchedProducts] = useState([])
+    const SearchedProducts = useRef([])
+    const updateSearchedproducts = (response) => {
+        SearchedProducts.current = response
+        console.log(response)
+    }
+    const [filteredProducts, setfilteredProducts] = useState([])
+
     const [filters, setfilters] = useState({
         category: "",
         subCategory: "",
@@ -37,24 +42,23 @@ function ProductSearch(props) {
             subCategory: filters.subCategory,
             minPrice: filters.minPrice,
             maxPrice: filters.maxPrice,
-            products: products
+            products: SearchedProducts.current
 
         }).then((response) => {
             if (response.status === 200) {
-                setSearchedProducts([...response.data]);
+                setfilteredProducts([...response.data]);
                 return Promise.resolve("Search Products updated");
             }
             else if (response.status === 204) {
-                setSearchedProducts([]);
+                setfilteredProducts([]);
                 return Promise.resolve("Search Products null");
             }
         })
     }
-    let fetchsearch = true;
+    console.log(SearchedProducts.current.length)
     console.log(history.pathname.substring(10))
     useEffect(() => {
         let filtersearch = true;
-        // setSearch(params.search)
         (async () => {
             setstatus("loading")
             if (Search !== history.pathname.substring(10)) {
@@ -64,14 +68,14 @@ function ProductSearch(props) {
                     .then((response) => {
                         console.log("inside")
                         if (response.status === 200) {
-                            fetchsearch = false;
-                            products = response.data
+                            let products = response.data
+                            updateSearchedproducts(products)
+                            products = [...response.data]
                             console.log(response.data)
                             return Promise.resolve("sucess")
                         }
                         else if (response.status === 204) {
-                            fetchsearch = false;
-                            products=[]
+                            updateSearchedproducts([])
                             return Promise.resolve("sucess");
                         }
                     }
@@ -86,9 +90,10 @@ function ProductSearch(props) {
         })()
             .then(() => {
                 if (filtersearch) {
-                    if (products.length === 0) {console.log("none"); setstatus("none") }
+                    console.log(SearchedProducts)
+                    if (SearchedProducts.current.length === 0) { console.log("none"); setstatus("none") }
                     else {
-                        updateproducts(products).then(() => {
+                        updateproducts(SearchedProducts).then(() => {
                             console.log("update status");
                             setstatus("done")
                         })
@@ -98,7 +103,7 @@ function ProductSearch(props) {
             })
             .catch(() => {
                 if (filtersearch) {
-                    if (SearchedProducts.length === 0) {console.log("none"); setstatus("none") }
+                    if (SearchedProducts.length === 0) { console.log("none"); setstatus("none") }
                     else {
                         updateproducts(SearchedProducts).then(() => {
                             console.log("update status");
@@ -110,12 +115,10 @@ function ProductSearch(props) {
             })
 
         return () => {
-            // filtersearch = false
             console.log("unmounted")
         }
     }, [params.search, filters])
     return (
-        // <>{props.Status === "done" &&
         <>
             <Categoriesdata.Consumer>{
                 data => {
@@ -132,10 +135,10 @@ function ProductSearch(props) {
                     <div className='col-sm-8 text-center bg-warning'>Loading ...</div>}
                 {status === "done" &&
                     <div className='col-sm-8 row productContainer'>
-                        {SearchedProducts.length === 0 ?
+                        {filteredProducts.length === 0 ?
                             < div className='fluid-container bg-warning text-center'>No Results for your Filters on Search</div>
                             :
-                            SearchedProducts.map(product => <ProductCard ProductName={product.productName} url={product.url}
+                            filteredProducts.map(product => <ProductCard ProductName={product.productName} url={product.url}
                                 key={product.productId} Id={product.productId}
                                 category={product.productCategory}
                                 subCategory={product.productSubCategory} Price={product.productPrice} />)
@@ -147,8 +150,6 @@ function ProductSearch(props) {
                 }
             </div>
         </>
-        // }
-        // </>
     )
 }
 
