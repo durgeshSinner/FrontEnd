@@ -10,38 +10,46 @@ import Categoriesbar from '../CommonComponents/Categoriesbar'
 import { useLocation } from "react-router-dom";
 
 function ProductSearch(props) {
+
     const history = useLocation();
 
     const params = useParams()
-    const [Search, setSearch] = useState()
     const [status, setstatus] = useState()
+    const [submitfilters, setsubmitfilters] = useState(false)
     const SearchedProducts = useRef([])
+    const Search = useRef("")
+    console.log(Search)
     const updateSearchedproducts = (response) => {
         SearchedProducts.current = response
         console.log(response)
     }
     const [filteredProducts, setfilteredProducts] = useState([])
 
-    const [filters, setfilters] = useState({
+    const filters = useRef({
         category: "",
         subCategory: "",
         minPrice: "0",
         maxPrice: "100"
     })
+    console.log(filters.current)
     const updatefilters = (category, subCategory, minPrice, maxPrice) => {
-        setfilters({
+        filters.current = {
             category: category,
             subCategory: subCategory,
             minPrice: minPrice,
             maxPrice: maxPrice
-        })
+        }
+
+    }
+    const onsubmitfilters = () => {
+        setsubmitfilters(!submitfilters)
     }
     const updateproducts = async (products) => {
         await axios.post(`http://localhost:8080/products/getFilteredProducts`, {
-            category: filters.category,
-            subCategory: filters.subCategory,
-            minPrice: filters.minPrice,
-            maxPrice: filters.maxPrice,
+            category: filters.current.category,
+            subCategory: filters.current.subCategory,
+            minPrice: filters.current.minPrice,
+            maxPrice: filters.current.maxPrice,
             products: SearchedProducts.current
 
         }).then((response) => {
@@ -55,15 +63,16 @@ function ProductSearch(props) {
             }
         })
     }
-    console.log(SearchedProducts.current.length)
     console.log(history.pathname.substring(10))
+
     useEffect(() => {
         let filtersearch = true;
         (async () => {
             setstatus("loading")
-            if (Search !== history.pathname.substring(10)) {
+            if (Search.current === "" || Search.current !== params.search) {
+                console.log("called")
+                Search.current = params.search
                 updatefilters("", "", 0, 100)
-                setSearch(params.search)
                 await axios.get(`http://localhost:8080/products/search/${params.search}`)
                     .then((response) => {
                         console.log("inside")
@@ -85,6 +94,7 @@ function ProductSearch(props) {
                     })
             }
             else {
+                console.log("error")
                 return Promise.reject("in the same search")
             }
         })()
@@ -103,7 +113,7 @@ function ProductSearch(props) {
             })
             .catch(() => {
                 if (filtersearch) {
-                    if (SearchedProducts.length === 0) { console.log("none"); setstatus("none") }
+                    if (SearchedProducts.current.length === 0) { console.log("none"); setstatus("none") }
                     else {
                         updateproducts(SearchedProducts).then(() => {
                             console.log("update status");
@@ -117,7 +127,7 @@ function ProductSearch(props) {
         return () => {
             console.log("unmounted")
         }
-    }, [params.search, filters])
+    }, [params.search, submitfilters])
     return (
         <>
             <Categoriesdata.Consumer>{
@@ -129,7 +139,9 @@ function ProductSearch(props) {
 
             <div className='container-fluid row '>
                 <div className='col-sm-3 productFilter justify-content-center'>
-                    <SearchFilters updatefilters={updatefilters} filters={filters} />
+                    {status === "done" &&
+                        <SearchFilters updatefilters={updatefilters} onsubmitfilters={onsubmitfilters} filters={filters} />
+                    }
                 </div>
                 {status === "loading" &&
                     <div className='col-sm-8 text-center bg-warning'>Loading ...</div>}
