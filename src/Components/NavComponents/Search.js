@@ -7,21 +7,17 @@ import { Categoriesdata } from '../../App'
 import '../CSS/Inputs.css'
 import SearchFilters from './SearchFilters'
 import Categoriesbar from '../CommonComponents/Categoriesbar'
-import { useLocation } from "react-router-dom";
 
 function ProductSearch(props) {
-
-    const history = useLocation();
 
     const params = useParams()
     const [status, setstatus] = useState()
     const [submitfilters, setsubmitfilters] = useState(false)
     const SearchedProducts = useRef([])
     const Search = useRef("")
-    console.log(Search)
+    console.log(Search.current)
     const updateSearchedproducts = (response) => {
         SearchedProducts.current = response
-        console.log(response)
     }
     const [filteredProducts, setfilteredProducts] = useState([])
 
@@ -31,7 +27,6 @@ function ProductSearch(props) {
         minPrice: "0",
         maxPrice: "100"
     })
-    console.log(filters.current)
     const updatefilters = (category, subCategory, minPrice, maxPrice) => {
         filters.current = {
             category: category,
@@ -63,24 +58,22 @@ function ProductSearch(props) {
             }
         })
     }
-    console.log(history.pathname.substring(10))
 
     useEffect(() => {
+        console.log("effect")
         let filtersearch = true;
         (async () => {
             setstatus("loading")
             if (Search.current === "" || Search.current !== params.search) {
                 console.log("called")
-                Search.current = params.search
                 updatefilters("", "", 0, 100)
                 await axios.get(`http://localhost:8080/products/search/${params.search}`)
                     .then((response) => {
-                        console.log("inside")
+                        Search.current = params.search
                         if (response.status === 200) {
                             let products = response.data
                             updateSearchedproducts(products)
                             products = [...response.data]
-                            console.log(response.data)
                             return Promise.resolve("sucess")
                         }
                         else if (response.status === 204) {
@@ -111,7 +104,8 @@ function ProductSearch(props) {
                 }
                 else { console.log("something went wrong") }
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e)
                 if (filtersearch) {
                     if (SearchedProducts.current.length === 0) { console.log("none"); setstatus("none") }
                     else {
@@ -125,6 +119,7 @@ function ProductSearch(props) {
             })
 
         return () => {
+            console.log(status)
             console.log("unmounted")
         }
     }, [params.search, submitfilters])
