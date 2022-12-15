@@ -2,7 +2,6 @@ import React from 'react'
 import { useState } from 'react'
 import { Categoriesdata } from '../../App'
 import '../CSS/Navbar.css'
-import { useParams } from 'react-router-dom'
 import '../CSS/Inputs.css'
 
 function SearchFilters(props) {
@@ -25,7 +24,7 @@ function SearchFilters(props) {
                             event.preventDefault();
                             setcompcategory(event.target.value)
                         }}>
-                            <option selected>{props.filters.current.category}</option>
+                            <option selected>{props.filters.category}</option>
                             <option value={""} defaultValue></option>
                             <Categoriesdata.Consumer>{
                                 data => { return data.map(category => <option value={category.category} key={category.category} >{category.category}</option>) }
@@ -38,7 +37,6 @@ function SearchFilters(props) {
                             <>
                                 <label  >SubCategory:</label>
                                 <select className='filterselectstyle' name="SubCategory"
-                                // defaultValue={props.filters.subCategory} 
                                 >
                                     <option value=""></option>
                                     <Categoriesdata.Consumer>{
@@ -96,7 +94,6 @@ function SearchFilters(props) {
                         else {
                             props.updatefilters(event.target.form[0].value, event.target.form[1].value, event.target.form[3].value, event.target.form[4].value)
                         }
-                        props.onsubmitfilters();
                     }}>Submit</button>
                 </div>
 

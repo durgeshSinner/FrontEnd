@@ -16,81 +16,66 @@ function UserForm(props) {
         streetname: { display: false, message: "" },
         cityname: { display: false, message: "" },
         pincode: { display: false, message: "" },
-        state: { display: false, message: "" }
+        statename: { display: false, message: "" }
     })
 
     //format validations
 
     const phonevalidation = (e) => {
-        var phoneno = /^\d{10}$/;
+        let phoneno = /^\d{10}$/;
         if (!e.target.value.match(phoneno)) { setwhitespacefields({ ...whitespacefields, phonenumber: { display: true, message: "Please Enter a 10 digit PHONE no" } }) }
         else { setwhitespacefields({ ...whitespacefields, phonenumber: { display: false, message: "" } }) }
 
     }
     const pincodevalidation = (e) => {
-        var pinno = /^\d{6}$/;
+        let pinno = /^\d{6}$/;
         if (!e.target.value.match(pinno)) { setwhitespacefields({ ...whitespacefields, pincode: { display: true, message: "Please Enter a 6 digit PINCODE" } }) }
         else { setwhitespacefields({ ...whitespacefields, pincode: { display: false, message: "" } }) }
 
     }
     //on submit validation
-    const formvalidation = (e) => {
+    const formvalidation = () => {
+
         if (props.usage === "Sign Up") {
-            if (e.target.form[0].value === "" || props.EmailPassValid.email.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately") }
-            else if (e.target.form[1].value === "" || props.EmailPassValid.password.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[2].value === "" || whitespacefields.phonenumber.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[3].value === "" || whitespacefields.username.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[4].value === "" || whitespacefields.streetname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[5].value === "" || whitespacefields.cityname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[6].value === "" || whitespacefields.pincode.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[7].value === "" || whitespacefields.state.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else {
-                return Promise.resolve("Filled")
+            const formdata = new FormData(document.getElementById("form"))
+            for (const [key, value] of formdata) {
+                console.log(key)
+                if (value === "" || whitespacefields[key].display) { throw "input field invalid"; }
             }
+            return true;
         }
         else {
-            let j=0
-            if(e.target.form[0].value !== props.details.userPhone){j++; console.log("hi")}
-            if(e.target.form[1].value !== props.details.userName){j++; console.log("hi")}
-            if(e.target.form[2].value !== props.details.userAddress.street){j++; console.log("hi")}
-            if(e.target.form[3].value !== props.details.userAddress.city){j++; console.log("hi")}
-            if(e.target.form[4].value !== props.details.userAddress.pincode){j++; console.log("hi")}
-            if(e.target.form[5].value !== props.details.userAddress.state){j++; console.log("hi")}
-
-            if (e.target.form[0].value === "" || j==0 || whitespacefields.phonenumber.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[1].value === "" || j==0 || whitespacefields.username.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[2].value === "" || j==0 || whitespacefields.streetname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[3].value === "" || j==0 || whitespacefields.cityname.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[4].value === "" || j==0 || whitespacefields.pincode.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else if (e.target.form[5].value === "" || j==0 || whitespacefields.state.display) { notify("Please fill the details appropriately"); return Promise.reject("Please fill the details appropriately"); }
-            else {
-                return Promise.resolve("Filled")
+            const formdata = new FormData(document.getElementById("profileform"))
+            let j = 0
+            for (const [key, value] of formdata) {
+                if (formdata.get(key) === props.details[key] || value === "" || whitespacefields[key].display) { j++ }
             }
+            if (j !== 6) { return }
+            else { throw "input not valid" }
         }
     }
     return (
-
         <>
             <div className='row'>
                 <div className='col-sm-6 inputconstainerstyle text-start'>
                     <label className='inputstyle border-0'>Phone number</label>
-                    <input type="number" className='inputstyle'
+                    <input type="number" className='inputstyle' name='phonenumber'
                         onBlur={(event) => {
                             if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, phonenumber: { display: true, message: "Cant leave Phone Number empty" } }) }
                             else { phonevalidation(event) }
                         }}
-                        defaultValue={props.details.userPhone}></input>
+                        defaultValue={props.details.phonenumber}></input>
                     {whitespacefields.phonenumber.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.phonenumber.message}</div>}
 
                 </div>
                 <div className='col-sm-6 inputconstainerstyle text-start' >
                     <label className='inputstyle border-0'>User Name</label>
-                    <input type="text" className='inputstyle'
+                    <input type="text" className='inputstyle' name='username'
                         onBlur={(event) => {
                             if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, username: { display: true, message: "Cant leave User Name empty" } }) }
                             else { setwhitespacefields({ ...whitespacefields, username: { display: false, message: "" } }) }
                         }}
-                        defaultValue={props.details.userName}></input>
+                        defaultValue={props.details.username}></input>
                     {whitespacefields.username.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.username.message}</div>}
 
                 </div>
@@ -98,23 +83,23 @@ function UserForm(props) {
             <div className='row'>
                 <div className='col-sm-6 inputconstainerstyle text-start'>
                     <label className='inputstyle border-0'>Street Name</label>
-                    <input type="text" className='inputstyle'
+                    <input type="text" className='inputstyle' name='streetname'
                         onBlur={(event) => {
                             if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, streetname: { display: true, message: "Cant leave street name empty" } }) }
                             else { setwhitespacefields({ ...whitespacefields, streetname: { display: false, message: "" } }) }
                         }}
-                        defaultValue={props.details.userAddress.street}></input>
+                        defaultValue={props.details.streetname}></input>
                     {whitespacefields.streetname.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.streetname.message}</div>}
 
                 </div>
                 <div className='col-sm-6 inputconstainerstyle text-start' >
                     <label className='inputstyle border-0'>City Name</label>
-                    <input type="text" className='inputstyle'
+                    <input type="text" className='inputstyle' name='cityname'
                         onBlur={(event) => {
                             if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, cityname: { display: true, message: "Cant leave city name empty" } }) }
                             else { setwhitespacefields({ ...whitespacefields, cityname: { display: false, message: "" } }) }
                         }}
-                        defaultValue={props.details.userAddress.city}></input>
+                        defaultValue={props.details.cityname}></input>
                     {whitespacefields.cityname.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.cityname.message}</div>}
 
                 </div>
@@ -122,24 +107,24 @@ function UserForm(props) {
             <div className='row'>
                 <div className='col-sm-6 inputconstainerstyle text-start'>
                     <label className='inputstyle border-0'>Pin Code</label>
-                    <input type="number" className='inputstyle'
+                    <input type="number" className='inputstyle' name='pincode'
                         onBlur={(event) => {
                             if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, pincode: { display: true, message: "Cant leave pincode empty" } }) }
                             else { pincodevalidation(event) }
                         }}
-                        defaultValue={props.details.userAddress.pincode}></input>
+                        defaultValue={props.details.pincode}></input>
                     {whitespacefields.pincode.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.pincode.message}</div>}
 
                 </div>
                 <div className='col-sm-6 inputconstainerstyle text-start'>
                     <label className='inputstyle border-0'>State</label>
-                    <select className='inputstyle'
+                    <select className='inputstyle' name='statename'
                         onBlur={(event) => {
-                            if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, state: { display: true, message: "Cant leave State empty" } }) }
-                            else { setwhitespacefields({ ...whitespacefields, state: { display: false, message: "" } }) }
+                            if (event.target.value === "") { setwhitespacefields({ ...whitespacefields, statename: { display: true, message: "Cant leave State empty" } }) }
+                            else { setwhitespacefields({ ...whitespacefields, statename: { display: false, message: "" } }) }
                         }}
-                        defaultValue={props.details.userAddress.state}>
-                        <option className='inputstyle' value={props.details.userAddress.state}>{props.details.userAddress.state}</option>
+                        defaultValue={props.details.statename}>
+                        <option className='inputstyle' value={props.details.statename}>{props.details.statename}</option>
                         <option value='Andaman and Nicobar Islands'>Andaman and Nicobar Islands</option>
                         <option value='Andhra Pradesh'>Andhra Pradesh</option>
                         <option value='Arunachal Pradesh'>Arunachal Pradesh</option>
@@ -176,7 +161,7 @@ function UserForm(props) {
                         <option value='Uttar Pradesh'>Uttar Pradesh</option>
                         <option value='West Bengal'>West Bengal</option>
                     </select>
-                    {whitespacefields.state.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.state.message}</div>}
+                    {whitespacefields.statename.display && <div className='text-start' style={{ color: "red", fontSize: "13px" }}>{whitespacefields.statename.message}</div>}
 
                 </div>
             </div>

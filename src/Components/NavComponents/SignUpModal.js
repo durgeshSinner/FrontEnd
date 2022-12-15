@@ -45,7 +45,6 @@ function SignUpModal(props) {
   //it takes a call back function which is provided in child component
   const formsubmit = (e, formvalidation) => {
     e.preventDefault();
-    console.log(e.target.form[0].value)
     const signupdetails = {
       credentials: {
         userEmail: e.target.form[0].value,
@@ -60,26 +59,30 @@ function SignUpModal(props) {
       },
       userPhone: e.target.form[2].value
     }
-    formvalidation(e)
-      .then(() => {
-        axios.post('http://localhost:8080/signup', signupdetails)
-          .then(Response => {
-            console.log(Response)
-            notify("Sucessfully Registered")
-            props.closesignup()
-            props.openlogin()
-          })
-      })
-      .catch(e => {
-        if (e.request.status === 0) { notify("unable to connect to server") }
-        else { console.log(e); }
-      })
+    try {
+      if (e.target.form[0].value === "" || EmailPassValid.email.display) { throw "invalid input" }
+      else if (e.target.form[1].value === "" || EmailPassValid.password.display) { throw "invalid input" }
+      formvalidation()
+      axios.post('http://localhost:8080/signup', signupdetails)
+        .then(Response => {
+          console.log(Response)
+          notify("Sucessfully Registered")
+          props.closesignup()
+          props.openlogin()
+        })
+        .catch(console.log(e))
+    } catch (error) {
+      notify(error);
+    }
   }
   //passed as props required by child component
   const details = {
-    userName: "",
-    userAddress: { city: "", state: "", pincode: "", street: "" },
-    userPhone: ""
+    username: "",
+    cityname: "",
+    statename: "",
+    pincode: "",
+    streetname: "",
+    phonenumber: ""
   }
   return (
     <>
@@ -90,7 +93,7 @@ function SignUpModal(props) {
             Sign up
           </div>
           <div className='body' >
-            <form>
+            <form id="form">
               <div className='container-fluid'>
                 <div className='row'>
                   <div className='col-sm-6 inputconstainerstyle'>
