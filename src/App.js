@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './Components/HomeComponents/Home';
 import Products from './Components/CommonComponents/Products';
-//hello
 import Nav from './Components/NavComponents/Nav'
 import Cart from './Components/CartComponents/Cart';
 import { ToastContainer } from 'react-toastify';
