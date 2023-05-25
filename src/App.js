@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './Components/HomeComponents/Home';
 import Products from './Components/CommonComponents/Products';
 import Nav from './Components/NavComponents/Nav'
-import Cart from './Components/CartComponents/Cart';
+import Cart from './Components/CartComponents/Cart'; //hello
 import { ToastContainer } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import Profile from './Components/ProfileComponents/Profile';
