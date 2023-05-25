@@ -7,7 +7,6 @@ import { ToastContainer } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import Profile from './Components/ProfileComponents/Profile';
 import Categorydata from './Components/CategoryComponents/Categorydata';
-//hello
 import axios from 'axios'
 import Search from './Components/NavComponents/Search';
 import CategorizedProducts from './Components/SearchbyCategory/CategorizedProducts';
