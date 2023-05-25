@@ -6,7 +6,6 @@ import Cart from './Components/CartComponents/Cart';
 import { ToastContainer } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import Profile from './Components/ProfileComponents/Profile';
-//hello
 import Categorydata from './Components/CategoryComponents/Categorydata';
 import axios from 'axios'
 import Search from './Components/NavComponents/Search';
