@@ -4,7 +4,7 @@ import Products from './Components/CommonComponents/Products';
 import Nav from './Components/NavComponents/Nav'
 import Cart from './Components/CartComponents/Cart';
 import { ToastContainer } from 'react-toastify';
-import React, { useEffect, useState } from 'react';//hello
+import React, { useEffect, useState } from 'react';
 import Profile from './Components/ProfileComponents/Profile';
 import Categorydata from './Components/CategoryComponents/Categorydata';
 import axios from 'axios'
