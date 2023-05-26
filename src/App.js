@@ -19,6 +19,8 @@ import NoPage from './Components/CommonComponents/NoPage';
 export const log = React.createContext();
 export const Categoriesdata = React.createContext();
 
+//hello
+
 function App() {
   //state for getting categories
   const [categories, Setcategories] = useState([])
