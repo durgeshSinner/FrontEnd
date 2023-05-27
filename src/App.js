@@ -9,6 +9,7 @@ import Profile from './Components/ProfileComponents/Profile';
 import Categorydata from './Components/CategoryComponents/Categorydata';
 import axios from 'axios'
 import Search from './Components/NavComponents/Search';
+//this is for testing purpose in React app LOcally
 import CategorizedProducts from './Components/SearchbyCategory/CategorizedProducts';
 import Admin from './Components/AdminComponents/Admin';
 import { toast } from 'react-toastify';
