@@ -17,7 +17,6 @@ import NoPage from './Components/CommonComponents/NoPage';
 
 
 export const log = React.createContext();
-//this is for testing
 export const Categoriesdata = React.createContext();
 
 function App() {
